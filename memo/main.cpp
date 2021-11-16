@@ -6,10 +6,11 @@
 int main() {
     {
         std::allocator<std::string> a;
-        std::string*                p = a.allocate(1);
-        std::string*                s = new (p) std::string("hello");
-        std::cout << *s << std::endl;
-        s->~basic_string();
-        a.deallocate(p, 1);
+        using traits   = std::allocator_traits<decltype(a)>;
+        std::string* p = traits::allocate(a, 1);
+        traits::construct(a, p, "hello");
+        std::cout << *p << std::endl;
+        traits::destroy(a, p);
+        traits::deallocate(a, p, 1);
     }
 }
