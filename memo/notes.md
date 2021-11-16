@@ -10,5 +10,5 @@
 - iterators_traits, reverse_iterator, enable_if, is_integral, equal/lexicographical compare, std::pair, std::make_pair を再実装しよう
 - publicに余計な関数はいれちゃだめ。入れるときはprivateかprotectedで
 - 非メンバ関数のオーバーロードでのみfriendが許可されているよ
-- vector<bool>のための最適化はやらなくていいよ
+- `vector<bool>`のための最適化はやらなくていいよ
 - stackクラスはデフォルトで内部にvectorを使っていいよ。オプションとして、他のSTLのコンテナを内部で使えるように変更する必要があるよ
