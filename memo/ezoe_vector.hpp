@@ -1,4 +1,5 @@
 #include <memory>
+#include <iostream>
 
 template<typename T, typename Allocator = std::allocator<T> >
 class ezoe_vector
@@ -65,4 +66,87 @@ public:
     const_reference back() const { return last - 1; }
 
     ezoe_vector() {}
+    ezoe_vector(const allocator_type& alloc) noexcept : alloc(alloc) {}
+
+    // ezoe_vector(size_type size, const allocator_type& alloc =
+    // allocator_type())
+    //     : ezoe_vector(alloc) {}
+    // ezoe_vector(size_type size, const_reference value,
+    //     const allocator_type& alloc = allocator_type())
+    //     : ezoe_vector(alloc) {}
+
+    ezoe_vector(size_type size, const allocator_type& alloc)
+        : ezoe_vector(alloc) {
+        std::cout << "aa" << std::endl;
+        resize(size);
+    }
+    ezoe_vector(
+        size_type size, const_reference value, const allocator_type& alloc)
+        : ezoe_vector(alloc) {
+        std::cout << "bb" << std::endl;
+        resize(size, value);
+    }
+
+private:
+    using traits = std::allocator_traits<allocator_type>;
+
+    pointer allocate(size_type n) { return traits::allocate(alloc, n); }
+    void    deallocate() { traits::deallocate(alloc, first, capacity()); }
+    void    destroy(pointer ptr) { traits::destroy(alloc, ptr); }
+    void    destroy_until(reverse_iterator rend) {
+        for (auto riter = rbegin(); riter != rend; ++riter, --last) {
+            destroy(&*riter);
+        }
+    }
+
+public:
+    void construct(pointer ptr) { traits::construct(alloc, ptr); }
+    void construct(pointer ptr, const_reference value) {
+        traits::construct(alloc, ptr, value);
+    }
+    void construct(pointer ptr, value_type&& value) {
+        traits::construct(alloc, ptr, std::move(value));
+    }
+    void clear() noexcept { destroy_until(rend()); }
+    ~ezoe_vector() {
+        clear();
+        deallocate();
+    }
+    void reserve(size_type sz) {
+        if (sz <= capacity())
+            return;
+        auto ptr          = allocate(sz);
+        auto old_first    = first;
+        auto old_last     = last;
+        auto old_capacity = capacity();
+        first             = ptr;
+        last              = first;
+        reserved_last     = first + sz;
+
+        // std::scope_exit e([&] { // TODO [&] って何？
+        //     traits::deallocate(alloc, old_first, old_capacity);
+        // });
+        for (auto old_iter = old_first; old_iter != old_last;
+             ++old_iter, ++last) {
+            construct(last, std::move(*old_iter));
+        }
+        for (auto riter = reverse_iterator(old_last),
+                  rend  = reverse_iterator(old_first);
+             riter != rend; ++riter)
+        {
+            destroy(&*riter);
+        }
+    }
+    void resize(size_type sz) {
+        if (sz < size()) {
+            auto diff = size() - sz;
+            destroy_until(rbegin() + diff);
+            last = first + sz;
+        } else if (sz > size()) {
+            reserve(sz);
+            for (; last != reserved_last; ++last) {
+                construct(last);
+            }
+        }
+    }
 };
