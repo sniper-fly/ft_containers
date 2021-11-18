@@ -10,3 +10,6 @@
 ## ブランチ運用
 masterとdevelopで運用  
 基本developで開発し、単位ごとにPRを作って、他の人に差分をわかりやすく示す  
+
+## CI
+github actionsやpre hookを使用してPR作成時、push時に自動テストが走るようにする
