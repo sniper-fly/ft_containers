@@ -2,7 +2,7 @@ CXX = clang++
 INCLUDE = -I"./googletest/include" -I"./"
 CXXFLAGS = -g -Wall -Wextra -Werror -std=c++98 $(INCLUDE) -MMD -MP
 
-SRC_FILES = hoge.cpp 
+SRC_FILES = main.cpp 
 SRC_DIR = src/
 OBJ_DIR = objects/
 SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
@@ -12,7 +12,7 @@ DEPENDS = $(OBJS:.o=.d)
 VPATH = $(SRC_DIR)
 
 LIBPATH = "./googletest/1_5_0"
-# LIBS = -lgtest -lpthread
+LIBS = -lgtest -lpthread
 
 NAME = a.out
 
