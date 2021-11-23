@@ -11,7 +11,11 @@ DEPENDS = $(OBJS:.o=.d)
 
 VPATH = $(SRC_DIR)
 
+ifeq ($(shell uname),Linux)
 LIBPATH = "./googletest/1_5_0"
+else
+LIBPATH = "./googletest/1_5_0mac"
+endif
 LIBS = -lgtest -lpthread
 
 NAME = a.out
