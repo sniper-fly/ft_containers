@@ -2,6 +2,8 @@
 #define VECTOR_HPP
 
 #include <memory>
+#include <iterator>
+#include "vector_iterator.hpp"
 
 namespace ft
 {
@@ -16,21 +18,15 @@ namespace ft
         typedef typename allocator_type::pointer         pointer;
         typedef typename allocator_type::const_pointer   const_pointer;
 
-        //// 一旦仮おき
-        typedef int  hoge;
-        typedef hoge iterator;
-        typedef hoge const_iterator;
-        typedef hoge reverse_iterator;
-        typedef hoge const_reverse_iterator;
-        typedef hoge difference_type;
+        typedef vector_iterator<pointer>             iterator;
+        typedef vector_iterator<const_pointer>       const_iterator;
+        typedef std::reverse_iterator<iterator>      reverse_iterator;
+        typedef std::reverse_iterator<const_pointer> const_reverse_iterator;
+        typedef std::iterator_traits<iterator>       difference_type;
         ////
 
         typedef size_t size_type;
 
-    private:
-        vector(); // for canonical form
-
-    public:
         explicit vector(const allocator_type& alloc = allocator_type());
         explicit vector(size_type n, const value_type& val = value_type(),
             const allocator_type& alloc = allocator_type());
@@ -86,6 +82,7 @@ namespace ft
 
         allocator_type get_allocator() const;
     };
+
     // vector: Non-member functions
     template<class T, class Alloc>
     bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
