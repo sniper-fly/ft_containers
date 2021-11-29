@@ -1,15 +1,11 @@
 CXX = clang++
-INCLUDE = -I"./googletest/include" -I"./"
+INCLUDE = -I"./googletest/include" -I"./include"
 CXXFLAGS = -g -Wall -Wextra -Werror -std=c++98 $(INCLUDE) -MMD -MP
 
-SRC_FILES = main.cpp 
-SRC_DIR = src/
+SRCS = ./src/main.cpp ./src/aaa/hoge.cpp 
 OBJ_DIR = objects/
-SRCS = $(addprefix $(SRC_DIR), $(SRC_FILES))
-OBJS = $(addprefix $(OBJ_DIR), $(SRC_FILES:.cpp=.o))
+OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 DEPENDS = $(OBJS:.o=.d)
-
-VPATH = $(SRC_DIR)
 
 ifeq ($(shell uname),Linux)
 LIBPATH = "./googletest/1_5_0"
@@ -26,6 +22,7 @@ $(NAME): $(OBJS)
 	$(CXX) $(CXXFLAGS) -o $(NAME) -L $(LIBPATH) $(OBJS) $(LIBS)
 
 $(OBJ_DIR)%.o: %.cpp
+	@if [ ! -e `dirname $@` ]; then mkdir -p `dirname $@`; fi
 	$(CXX) $(CXXFLAGS) -c $< -o $@
 
 -include $(DEPENDS)
