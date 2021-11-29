@@ -23,19 +23,29 @@ namespace ft
         typedef std::reverse_iterator<iterator>      reverse_iterator;
         typedef std::reverse_iterator<const_pointer> const_reverse_iterator;
         typedef std::iterator_traits<iterator>       difference_type;
-        ////
+        typedef size_t                               size_type;
 
-        typedef size_t size_type;
+    private:
+        pointer        first; // 先頭の要素へのポインター
+        pointer        last;  // 最後の要素の1つ前方のポインター
+        pointer        reserved_last; // 確保したストレージの終端
+        allocator_type alloc;         // アロケーターの値
 
-        explicit vector(const allocator_type& alloc = allocator_type());
+    public:
+        /* default */
+        explicit vector(const allocator_type& alloc = allocator_type()) {}
+        /* fill */
         explicit vector(size_type n, const value_type& val = value_type(),
-            const allocator_type& alloc = allocator_type());
-        template<class InputIterator>
-        vector(InputIterator first, InputIterator last,
-            const allocator_type& alloc = allocator_type());
-        vector(const vector& x);
+            const allocator_type& alloc = allocator_type()) {}
+        /* range */
+        // template<class InputIterator>
+        // vector(InputIterator first, InputIterator last,
+        //     const allocator_type& alloc = allocator_type());
+        /* copy */
+        vector(const vector& x) {}
 
-        ~vector();
+        ~vector() {}
+        //// DOING
 
         vector& operator=(const vector& x);
 
@@ -81,6 +91,29 @@ namespace ft
         void     clear();
 
         allocator_type get_allocator() const;
+
+        /////////// implementation /////////////////
+        // explicit vector(const allocator_type& alloc = allocator_type())
+        //     : alloc(alloc), first(NULL), last(NULL), reserved_last(NULL) {}
+        // explicit vector(size_type n, const value_type& val = value_type(),
+        //     const allocator_type& alloc = allocator_type()) {
+        //     // size n で、要素をvalとして allocate する
+        //     (void);
+        //     (void);
+        // }
+        // template<class InputIterator>
+        // vector(InputIterator first, InputIterator last,
+        //     const allocator_type& alloc = allocator_type()) {
+        //     // そのままだとfillコンストラクタと区別がつかない
+        //     (void);
+        //     (void);
+        // }
+        // vector(const vector& x)
+        //     : alloc(x.alloc), first(NULL), last(NULL), reserved_last(NULL) {
+        //     (void);
+        //     (void);
+        // }
+        ////////////////////////////////////////////
     };
 
     // vector: Non-member functions

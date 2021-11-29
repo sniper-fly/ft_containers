@@ -1,8 +1,10 @@
 CXX = clang++
 INCLUDE = -I"./googletest/include" -I"./include"
 CXXFLAGS = -g -Wall -Wextra -Werror -std=c++98 $(INCLUDE) -MMD -MP
+EXTRA_FLAGS = -Wno-unused-variable -Wno-unused-parameter
+CXXFLAGS += $(EXTRA_FLAGS)
 
-SRCS = ./src/main.cpp ./src/aaa/hoge.cpp 
+SRCS = $(shell find ./src -type f -name '*.cpp')
 OBJ_DIR = objects/
 OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 DEPENDS = $(OBJS:.o=.d)
@@ -37,8 +39,5 @@ re: fclean all
 
 test: all
 	$(NAME)
-
-update_src:
-	./script/src_updater.sh
 
 .PHONY: all clean fclean re update_src test
