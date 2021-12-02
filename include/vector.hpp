@@ -4,6 +4,7 @@
 #include <memory>
 #include <iterator>
 #include "vector_iterator.hpp"
+#include <stdexcept>
 
 namespace ft
 {
@@ -26,18 +27,26 @@ namespace ft
         typedef size_t                               size_type;
 
     private:
-        pointer        first; // 先頭の要素へのポインター
-        pointer        last;  // 最後の要素の1つ前方のポインター
-        pointer        reserved_last; // 確保したストレージの終端
-        allocator_type alloc;         // アロケーターの値
+        pointer        _first; // 先頭の要素へのポインター
+        pointer        _last;  // 最後の要素の1つ前方のポインター
+        pointer        _reserved_last; // 確保したストレージの終端
+        allocator_type _alloc;         // アロケーターの値
 
     public:
         /* default */
-        explicit vector(const allocator_type& alloc = allocator_type()) {}
+        explicit vector(const allocator_type& alloc = allocator_type())
+            : _first(NULL), _last(NULL), _reserved_last(NULL), _alloc(alloc) {}
         /* fill */
         explicit vector(size_type n, const value_type& val = value_type(),
-            const allocator_type& alloc = allocator_type()) {}
-        /* range */
+            const allocator_type& alloc = allocator_type())
+            : _first(NULL), _last(NULL), _reserved_last(NULL), _alloc(alloc) {
+            _first         = _alloc.allocate(n);
+            _last          = _first + n;
+            _reserved_last = _last;
+            for (size_type i = 0; i < n; ++i) {
+                _alloc.construct(_first + i, val);
+            }
+        } /* range */
         // template<class InputIterator>
         // vector(InputIterator first, InputIterator last,
         //     const allocator_type& alloc = allocator_type());
@@ -49,30 +58,36 @@ namespace ft
 
         vector& operator=(const vector& x);
 
-        iterator               begin() {}
-        const_iterator         begin() const {}
-        iterator               end() {}
-        const_iterator         end() const {}
+        iterator               begin() { return iterator(_first); }
+        const_iterator         begin() const { return const_iterator(_first); }
+        iterator               end() { return iterator(_last); }
+        const_iterator         end() const { return const_iterator(_last); }
         reverse_iterator       rbegin() {}
         const_reverse_iterator rbegin() const {}
         reverse_iterator       rend() {}
         const_reverse_iterator rend() const {}
 
-        size_type size() const;
+        size_type size() const { return end() - begin(); };
         size_type max_size() const;
         void      resize(size_type n, value_type val = value_type());
-        size_type capacity() const;
-        bool      empty() const;
+        size_type capacity() const { return _reserved_last - _first; }
+        bool      empty() const { return begin() == end(); }
         void      reserve(size_type n);
 
-        reference       operator[](size_type n) {}
-        const_reference operator[](size_type n) const {}
-        reference       at(size_type n) {}
-        const_reference at(size_type n) const {}
-        reference       front() {}
-        const_reference front() const {}
-        reference       back() {}
-        const_reference back() const {}
+        reference       operator[](size_type n) { return _first[n]; }
+        const_reference operator[](size_type n) const { return _first[n]; }
+        reference       at(size_type n) {
+            check_range(n);
+            return _first[n];
+        }
+        const_reference at(size_type n) const {
+            check_range(n);
+            return _first[n];
+        }
+        reference       front() { return *begin(); }
+        const_reference front() const { return *begin(); }
+        reference       back() { return *(end() - 1); }
+        const_reference back() const { return *(end() - 1); }
 
         template<class InputIterator>
         void assign(
@@ -92,27 +107,22 @@ namespace ft
 
         allocator_type get_allocator() const;
 
-        /////////// implementation /////////////////
-        // explicit vector(const allocator_type& alloc = allocator_type())
-        //     : alloc(alloc), first(NULL), last(NULL), reserved_last(NULL) {}
-        // explicit vector(size_type n, const value_type& val = value_type(),
-        //     const allocator_type& alloc = allocator_type()) {
-        //     // size n で、要素をvalとして allocate する
-        //     (void);
-        //     (void);
-        // }
-        // template<class InputIterator>
-        // vector(InputIterator first, InputIterator last,
-        //     const allocator_type& alloc = allocator_type()) {
-        //     // そのままだとfillコンストラクタと区別がつかない
-        //     (void);
-        //     (void);
-        // }
-        // vector(const vector& x)
-        //     : alloc(x.alloc), first(NULL), last(NULL), reserved_last(NULL) {
-        //     (void);
-        //     (void);
-        // }
+    private:
+        void check_range(size_type n) {
+            if (size() <= n) {
+                std::string err_msg =
+                    "vector::check_range: n (which is " + num2str(n) +
+                    ") >= this->size() (which is " + num2str(n) + ")";
+                throw std::out_of_range(err_msg);
+            }
+        }
+        template<typename num>
+        std::string num2str(num number) {
+            std::ostringstream ss;
+            ss << number;
+            return ss.str();
+        }
+        /////////// debug func /////////////////////
         ////////////////////////////////////////////
     };
 
