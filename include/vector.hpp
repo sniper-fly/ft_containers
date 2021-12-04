@@ -6,6 +6,7 @@
 #include <iterator>
 #include "vector_iterator.hpp"
 #include <stdexcept>
+#include <sstream>
 
 namespace ft
 {
@@ -52,7 +53,11 @@ namespace ft
         /* copy */
         vector(const vector& x) {}
 
-        ~vector() {}
+        ~vector() {
+            // _alloc.destroy(_first);
+            // destroy_until
+            _alloc.deallocate(_first, capacity());
+        }
         //// DOING
 
         vector& operator=(const vector& x);
