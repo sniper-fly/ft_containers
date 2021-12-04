@@ -1,5 +1,6 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
+#define rep(len) for (size_t i = 0; i < len; ++i)
 
 #include <memory>
 #include <iterator>
@@ -43,9 +44,7 @@ namespace ft
             _first         = _alloc.allocate(n);
             _last          = _first + n;
             _reserved_last = _last;
-            for (size_type i = 0; i < n; ++i) {
-                _alloc.construct(_first + i, val);
-            }
+            rep(n) { _alloc.construct(_first + i, val); }
         } /* range */
         // template<class InputIterator>
         // vector(InputIterator first, InputIterator last,
@@ -72,7 +71,24 @@ namespace ft
         void      resize(size_type n, value_type val = value_type());
         size_type capacity() const { return _reserved_last - _first; }
         bool      empty() const { return begin() == end(); }
-        void      reserve(size_type n);
+        void      reserve(size_type n) {
+            // max_sizeより大きかったら
+            //'std::length_error' what(): vector::reserve
+            //上記のエラーを吐く
+            if (n <= capacity()) {
+                return;
+            }
+            pointer         new_first = _alloc.allocate(n);
+            const size_type len       = size();
+            rep(len) {
+                _alloc.construct(new_first + i, _first[i]);
+                _alloc.destroy(_first + i);
+            }
+            _alloc.deallocate(_first, capacity());
+            _first         = new_first;
+            _last          = _first + len;
+            _reserved_last = _first + n;
+        }
 
         reference       operator[](size_type n) { return _first[n]; }
         const_reference operator[](size_type n) const { return _first[n]; }
@@ -92,7 +108,9 @@ namespace ft
         template<class InputIterator>
         void assign(
             InputIterator first, InputIterator last); // TODO fukadaさんと違う
-        void     assign(size_type n, const T& val);
+        void assign(size_type n, const T& val) {
+            //
+        }
         void     push_back(const value_type& val);
         void     pop_back();
         iterator insert(iterator position, const value_type& val);
