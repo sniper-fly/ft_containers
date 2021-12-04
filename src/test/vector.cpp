@@ -72,6 +72,11 @@ namespace
         EXPECT_TRUE(hoge.back() == 5);
     }
 
+    TEST(vector, std_out) {
+        testing::internal::CaptureStdout();
+        std::cout << "hello" << std::endl;
+        EXPECT_STREQ("hello\n", testing::internal::GetCapturedStdout().c_str());
+    }
     // TEST(Vector, modifiers) {  }
     // TEST(Vector, allocator) {  }
 } // namespace
