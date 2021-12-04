@@ -2,6 +2,7 @@
 #include "vector.hpp"
 #include <iostream>
 #include <string>
+#include "macro.hpp"
 
 class my_class
 {

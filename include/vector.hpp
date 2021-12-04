@@ -1,7 +1,7 @@
 #ifndef VECTOR_HPP
 #define VECTOR_HPP
-#define rep(len) for (size_t i = 0; i < len; ++i)
 
+#include "macro.hpp"
 #include <memory>
 #include <iterator>
 #include "vector_iterator.hpp"
@@ -115,7 +115,7 @@ namespace ft
             InputIterator first, InputIterator last); // TODO fukadaさんと違う
         void assign(size_type n, const T& val) {
             //
-        }
+            }
         void     push_back(const value_type& val);
         void     pop_back();
         iterator insert(iterator position, const value_type& val);
