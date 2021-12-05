@@ -160,7 +160,7 @@ namespace ft
             if (size() <= n) {
                 std::string err_msg =
                     "vector::check_range: n (which is " + num2str(n) +
-                    ") >= this->size() (which is " + num2str(n) + ")";
+                    ") >= this->size() (which is " + num2str(size()) + ")";
                 throw std::out_of_range(err_msg);
             }
         }
