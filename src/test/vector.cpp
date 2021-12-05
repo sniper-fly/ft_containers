@@ -29,16 +29,16 @@ namespace
     ft::vector<my_class> piyo(7, my_class(1, 2, 3, "foo"));
     ft::vector<my_class> foo;
 
-    TEST(Vector, Constructor) {
+    TEST(Constructor, _) {
         for (int i = 0; i < 3; ++i) {
             EXPECT_TRUE(42 == fuga[i]);
         }
     }
 
-    // TEST(Vector, Destructor) { }
-    // TEST(Vector, operator=) {  }
-    // TEST(Vector, iterators) {  }
-    TEST(Vector, capacity) {
+    // TEST(Destructor, ) { }
+    // TEST(operator=, ) {  }
+    // TEST(iterators, ) {  }
+    TEST(capacity, size_capacity_empty) {
         EXPECT_TRUE(fuga.size() == 3);
         EXPECT_TRUE(piyo.size() == 7);
         EXPECT_TRUE(foo.size() == 0);
@@ -58,7 +58,7 @@ namespace
         rep(5) { EXPECT_TRUE(baz[i] == expect); }
     }
 
-    TEST(Vector, element_access) {
+    TEST(element_access, at_front_back) {
         ft::vector<int> hoge(3, 5);
         // EXPECT_DEATH(hoge.at(4), ".*");
         try {
@@ -72,11 +72,14 @@ namespace
         EXPECT_TRUE(hoge.back() == 5);
     }
 
+    TEST(modifiers, assign) {
+    }
+
+    // TEST(allocator, ) {  }
+
     TEST(vector, std_out) {
         testing::internal::CaptureStdout();
         std::cout << "hello" << std::endl;
         EXPECT_STREQ("hello\n", testing::internal::GetCapturedStdout().c_str());
     }
-    // TEST(Vector, modifiers) {  }
-    // TEST(Vector, allocator) {  }
 } // namespace
