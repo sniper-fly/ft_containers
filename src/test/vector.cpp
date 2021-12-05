@@ -62,6 +62,9 @@ namespace
         ft::vector<int> copied(original);
         EXPECT_TRUE(original == copied);
         EXPECT_TRUE(original.capacity() == copied.capacity());
+
+        const ft::vector<int> const_copied(original);
+        EXPECT_TRUE(original == copied);
     }
 
     TEST(destructor, _) {
@@ -84,7 +87,16 @@ namespace
         std::cout << "-----------------------------------" << std::endl;
     }
 
-    // TEST(operator=, ) {  }
+    TEST(operator_eq, _) {
+        ft::vector<my_class> opeq;
+        opeq.push_back(my_class(1, 2, 3, "a"));
+        opeq.push_back(my_class(4, 5, 6, "b"));
+        opeq.push_back(my_class(7, 8, 9, "c"));
+        ft::vector<my_class> copied;
+        copied = opeq;
+        EXPECT_TRUE(opeq == copied);
+        EXPECT_TRUE(opeq.capacity() == copied.capacity());
+    }
     // TEST(iterators, ) {  }
 
     TEST(capacity, size_capacity_empty) {

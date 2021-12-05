@@ -58,11 +58,7 @@ namespace ft
         vector(const vector& x)
             : _first(NULL), _last(NULL), _reserved_last(NULL),
               _alloc(x._alloc) {
-            //
-            _first         = _alloc.allocate(x.size());
-            _last          = _first + x.size();
-            _reserved_last = _first + x.capacity();
-            rep(x.size()) { _alloc.construct(_first + i, x[i]); }
+            *this = x;
         }
 
         ~vector() {
@@ -70,7 +66,14 @@ namespace ft
             _alloc.deallocate(_first, capacity());
         }
 
-        vector& operator=(const vector& x);
+        vector& operator=(const vector& x) {
+            this->~vector();
+            _first         = _alloc.allocate(x.size());
+            _last          = _first + x.size();
+            _reserved_last = _first + x.capacity();
+            rep(x.size()) { _alloc.construct(_first + i, x[i]); }
+            return *this;
+        }
 
         // XXX iterators
         iterator               begin() { return iterator(_first); }
