@@ -125,7 +125,13 @@ namespace ft
             _last = _first + n;
             rep(n) { _alloc.construct(_first + i, val); }
         }
-        void push_back(const value_type& val);
+        void push_back(const value_type& val) {
+            if (size() == capacity()) {
+                reserve(capacity() ? capacity() * 2 : 10);
+            }
+            _alloc.construct(_last, val);
+            ++_last;
+        }
         void pop_back() {
             _alloc.destroy(&_first[size() - 1]);
             --_last;
@@ -166,9 +172,21 @@ namespace ft
 
     // vector: Non-member functions
     template<class T, class Alloc>
-    bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator==(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        if (lhs.size() != rhs.size()) {
+            return false;
+        }
+        rep(lhs.size()) {
+            if (lhs[i] != rhs[i]) {
+                return false;
+            }
+        }
+        return true;
+    }
     template<class T, class Alloc>
-    bool operator!=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator!=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return NOT(lhs == rhs);
+    }
     template<class T, class Alloc>
     bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
     template<class T, class Alloc>

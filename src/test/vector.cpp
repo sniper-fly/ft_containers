@@ -11,16 +11,27 @@ public:
     my_class(int hoge, double fuga, float piyo, std::string foo)
         : hoge(hoge), fuga(fuga), piyo(piyo), foo(foo) {}
 
-    int    hoge;
-    double fuga;
-    float  piyo;
-
+    int         hoge;
+    double      fuga;
+    float       piyo;
     std::string foo;
-    bool        operator==(my_class& x) {
-        return hoge == x.hoge && fuga == x.fuga && piyo == x.piyo &&
-               foo == x.foo;
+
+    my_class& operator=(const my_class& x) {
+        hoge = x.hoge;
+        fuga = x.fuga;
+        piyo = x.piyo;
+        foo  = x.foo;
+        return *this;
     }
 };
+
+bool operator==(const my_class& lhs, const my_class& rhs) {
+    return lhs.hoge == rhs.hoge && lhs.fuga == rhs.fuga &&
+           lhs.piyo == rhs.piyo && lhs.foo == rhs.foo;
+}
+bool operator!=(const my_class& lhs, const my_class& rhs) {
+    return NOT(lhs == rhs);
+}
 
 namespace
 {
@@ -44,7 +55,7 @@ namespace
         EXPECT_TRUE(foo.size() == 0);
         EXPECT_TRUE(piyo.capacity() == 7);
         EXPECT_TRUE(foo.empty());
-        EXPECT_TRUE(! piyo.empty());
+        EXPECT_TRUE(NOT piyo.empty());
     }
     TEST(capacity, reserve) {
         ft::vector<my_class> bar(5, my_class(1, 2, 3, "a"));
@@ -81,7 +92,7 @@ namespace
         EXPECT_TRUE(modi == expect1);
 
         modi.assign(5, my_class(200, 201, 202, "hoge"));
-        ft::vector<my_class> expect2(2, my_class(100, 101, 102, "z"));
+        ft::vector<my_class> expect2(5, my_class(200, 201, 202, "hoge"));
         EXPECT_TRUE(modi == expect2);
     }
 
@@ -89,6 +100,18 @@ namespace
         ft::vector<my_class> cle(3, my_class(1, 2, 3, "a"));
         cle.clear();
         EXPECT_TRUE(cle.empty());
+    }
+
+    TEST(modifiers, push_back) {
+        ft::vector<my_class> pus;
+        pus.push_back(my_class(1, 2, 3, "a"));
+        ft::vector<my_class> expect(2, my_class(1, 2, 3, "a"));
+        EXPECT_TRUE(pus[0] == expect[0]);
+
+        my_class add_one(10, 11, 12, "ab");
+        expect[1] = add_one;
+        pus.push_back(add_one);
+        EXPECT_TRUE(pus[1] == expect[1]);
     }
 
     // TEST(allocator, ) {  }
