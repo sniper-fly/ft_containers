@@ -8,6 +8,9 @@
 #include <stdexcept>
 #include <sstream>
 
+// TODO
+namespace forbidden = std;
+
 namespace ft
 {
     template<class T, class Alloc = std::allocator<T> >
@@ -21,11 +24,12 @@ namespace ft
         typedef typename allocator_type::pointer         pointer;
         typedef typename allocator_type::const_pointer   const_pointer;
 
-        typedef vector_iterator<pointer>             iterator;
-        typedef vector_iterator<const_pointer>       const_iterator;
-        typedef std::reverse_iterator<iterator>      reverse_iterator;
-        typedef std::reverse_iterator<const_pointer> const_reverse_iterator;
-        typedef std::iterator_traits<iterator>       difference_type;
+        typedef vector_iterator<pointer>              iterator;
+        typedef vector_iterator<const_pointer>        const_iterator;
+        typedef forbidden::reverse_iterator<iterator> reverse_iterator;
+        typedef forbidden::reverse_iterator<const_pointer>
+                                                     const_reverse_iterator;
+        typedef forbidden::iterator_traits<iterator> difference_type;
         typedef size_t                               size_type;
 
     private:
