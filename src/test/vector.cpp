@@ -139,13 +139,27 @@ namespace
         pus.push_back(my_class(1, 2, 3, "a"));
         ft::vector<my_class> expect(2, my_class(1, 2, 3, "a"));
         EXPECT_TRUE(pus[0] == expect[0]);
-
         my_class add_one(10, 11, 12, "ab");
         expect[1] = add_one;
         pus.push_back(add_one);
         EXPECT_TRUE(pus[1] == expect[1]);
     }
 
+    TEST(modifiers, swap) {
+        ft::vector<int> a;
+        ft::vector<int> b;
+        a.push_back(0);
+        a.push_back(1);
+        a.push_back(2);
+        ft::vector<int> a_copy(a);
+        b.push_back(3);
+        b.push_back(4);
+        b.push_back(5);
+        ft::vector<int> b_copy(b);
+        a.swap(b);
+        EXPECT_TRUE(b == a_copy);
+        EXPECT_TRUE(b == b_copy);
+    }
     // TEST(allocator, ) {  }
 
     TEST(vector, std_out) {
