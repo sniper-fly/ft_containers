@@ -4,37 +4,47 @@
 #include <string>
 #include "macro.hpp"
 
-class my_class
-{
-public:
-    my_class() {}
-    my_class(int hoge, double fuga, float piyo, std::string foo)
-        : hoge(hoge), fuga(fuga), piyo(piyo), foo(foo) {}
-
-    int         hoge;
-    double      fuga;
-    float       piyo;
-    std::string foo;
-
-    my_class& operator=(const my_class& x) {
-        hoge = x.hoge;
-        fuga = x.fuga;
-        piyo = x.piyo;
-        foo  = x.foo;
-        return *this;
-    }
-};
-
-bool operator==(const my_class& lhs, const my_class& rhs) {
-    return lhs.hoge == rhs.hoge && lhs.fuga == rhs.fuga &&
-           lhs.piyo == rhs.piyo && lhs.foo == rhs.foo;
-}
-bool operator!=(const my_class& lhs, const my_class& rhs) {
-    return NOT(lhs == rhs);
-}
 
 namespace
 {
+    class my_class
+    {
+    public:
+        my_class() {}
+        my_class(int hoge, double fuga, float piyo, std::string foo)
+            : hoge(hoge), fuga(fuga), piyo(piyo), foo(foo) {}
+        ~my_class() {
+            if (should_output_destructor_msg) {
+                std::cout << foo;
+            }
+        }
+
+        static bool should_output_destructor_msg;
+
+        int         hoge;
+        double      fuga;
+        float       piyo;
+        std::string foo;
+
+        my_class& operator=(const my_class& x) {
+            hoge = x.hoge;
+            fuga = x.fuga;
+            piyo = x.piyo;
+            foo  = x.foo;
+            return *this;
+        }
+    };
+    bool my_class::should_output_destructor_msg = false;
+
+    bool operator==(const my_class& lhs, const my_class& rhs) {
+        return lhs.hoge == rhs.hoge && lhs.fuga == rhs.fuga &&
+               lhs.piyo == rhs.piyo && lhs.foo == rhs.foo;
+    }
+    bool operator!=(const my_class& lhs, const my_class& rhs) {
+        return NOT(lhs == rhs);
+    }
+
+
     ft::vector<int>      hoge;
     ft::vector<int>      fuga(3, 42);
     ft::vector<my_class> piyo(7, my_class(1, 2, 3, "foo"));
@@ -46,9 +56,30 @@ namespace
         }
     }
 
+    TEST(destructor, _) {
+        std::cout << "----- destructor output test ------" << std::endl;
+        my_class::should_output_destructor_msg = true;
+        testing::internal::CaptureStdout();
+        {
+            my_class             element(1, 1, 1, "0");
+            ft::vector<my_class> dest(4, element);
+            element.foo = "1";
+            dest[1]     = element;
+            element.foo = "2";
+            dest[2]     = element;
+            element.foo = "3";
+            dest[3]     = element;
+            element.foo = "";
+        }
+        EXPECT_STREQ("3210", testing::internal::GetCapturedStdout().c_str());
+        my_class::should_output_destructor_msg = false;
+        std::cout << "-----------------------------------" << std::endl;
+    }
+
     // TEST(Destructor, ) { }
     // TEST(operator=, ) {  }
     // TEST(iterators, ) {  }
+
     TEST(capacity, size_capacity_empty) {
         EXPECT_TRUE(fuga.size() == 3);
         EXPECT_TRUE(piyo.size() == 7);
@@ -57,6 +88,7 @@ namespace
         EXPECT_TRUE(foo.empty());
         EXPECT_TRUE(NOT piyo.empty());
     }
+
     TEST(capacity, reserve) {
         ft::vector<my_class> bar(5, my_class(1, 2, 3, "a"));
         ft::vector<my_class> baz(5, my_class(1, 2, 3, "a"));

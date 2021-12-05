@@ -58,8 +58,7 @@ namespace ft
         vector(const vector& x) {}
 
         ~vector() {
-            // _alloc.destroy(_first);
-            // destroy_until 後ろからデストラクタを呼ぶ
+            clear();
             _alloc.deallocate(_first, capacity());
         }
         //// DOING
