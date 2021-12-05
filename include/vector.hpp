@@ -55,13 +55,20 @@ namespace ft
         // vector(InputIterator first, InputIterator last,
         //     const allocator_type& alloc = allocator_type());
         /* copy */
-        vector(const vector& x) {}
+        vector(const vector& x)
+            : _first(NULL), _last(NULL), _reserved_last(NULL),
+              _alloc(x._alloc) {
+            //
+            _first         = _alloc.allocate(x.size());
+            _last          = _first + x.size();
+            _reserved_last = _first + x.capacity();
+            rep(x.size()) { _alloc.construct(_first + i, x[i]); }
+        }
 
         ~vector() {
             clear();
             _alloc.deallocate(_first, capacity());
         }
-        //// DOING
 
         vector& operator=(const vector& x);
 

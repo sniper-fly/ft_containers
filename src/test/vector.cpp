@@ -50,10 +50,18 @@ namespace
     ft::vector<my_class> piyo(7, my_class(1, 2, 3, "foo"));
     ft::vector<my_class> foo;
 
-    TEST(Constructor, _) {
+    TEST(Constructor, default_fill_copy) {
         for (int i = 0; i < 3; ++i) {
             EXPECT_TRUE(42 == fuga[i]);
         }
+        ft::vector<int> original;
+        original.push_back(1);
+        original.push_back(2);
+        original.push_back(3);
+        original.push_back(4);
+        ft::vector<int> copied(original);
+        EXPECT_TRUE(original == copied);
+        EXPECT_TRUE(original.capacity() == copied.capacity());
     }
 
     TEST(destructor, _) {
@@ -76,7 +84,6 @@ namespace
         std::cout << "-----------------------------------" << std::endl;
     }
 
-    // TEST(Destructor, ) { }
     // TEST(operator=, ) {  }
     // TEST(iterators, ) {  }
 
@@ -158,7 +165,7 @@ namespace
         ft::vector<int> b_copy(b);
         a.swap(b);
         EXPECT_TRUE(b == a_copy);
-        EXPECT_TRUE(b == b_copy);
+        EXPECT_TRUE(b == a_copy);
     }
     // TEST(allocator, ) {  }
 
