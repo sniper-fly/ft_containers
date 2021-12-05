@@ -73,6 +73,22 @@ namespace
     }
 
     TEST(modifiers, assign) {
+        ft::vector<my_class> modi(3, my_class(1, 2, 3, "a"));
+        modi[1] = my_class(4, 5, 6, "b");
+        modi[2] = my_class(7, 8, 9, "c");
+        modi.assign(2, my_class(100, 101, 102, "z"));
+        ft::vector<my_class> expect1(2, my_class(100, 101, 102, "z"));
+        EXPECT_TRUE(modi == expect1);
+
+        modi.assign(5, my_class(200, 201, 202, "hoge"));
+        ft::vector<my_class> expect2(2, my_class(100, 101, 102, "z"));
+        EXPECT_TRUE(modi == expect2);
+    }
+
+    TEST(modifiers, clear) {
+        ft::vector<my_class> cle(3, my_class(1, 2, 3, "a"));
+        cle.clear();
+        EXPECT_TRUE(cle.empty());
     }
 
     // TEST(allocator, ) {  }

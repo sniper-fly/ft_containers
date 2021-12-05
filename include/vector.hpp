@@ -55,13 +55,14 @@ namespace ft
 
         ~vector() {
             // _alloc.destroy(_first);
-            // destroy_until
+            // destroy_until 後ろからデストラクタを呼ぶ
             _alloc.deallocate(_first, capacity());
         }
         //// DOING
 
         vector& operator=(const vector& x);
 
+        // XXX iterators
         iterator               begin() { return iterator(_first); }
         const_iterator         begin() const { return const_iterator(_first); }
         iterator               end() { return iterator(_last); }
@@ -71,6 +72,7 @@ namespace ft
         reverse_iterator       rend() {}
         const_reverse_iterator rend() const {}
 
+        // XXX capacity
         size_type size() const { return end() - begin(); };
         size_type max_size() const;
         void      resize(size_type n, value_type val = value_type());
@@ -95,6 +97,7 @@ namespace ft
             _reserved_last = _first + n;
         }
 
+        // XXX element access
         reference       operator[](size_type n) { return _first[n]; }
         const_reference operator[](size_type n) const { return _first[n]; }
         reference       at(size_type n) {
@@ -110,24 +113,36 @@ namespace ft
         reference       back() { return *(end() - 1); }
         const_reference back() const { return *(end() - 1); }
 
+        // XXX modifiers
         template<class InputIterator>
-        void assign(
-            InputIterator first, InputIterator last); // TODO fukadaさんと違う
+        void assign(InputIterator first, InputIterator last);
         void assign(size_type n, const T& val) {
-            //
+            clear();
+            if (n > capacity()) {
+                reserve(n);
             }
-        void     push_back(const value_type& val);
-        void     pop_back();
+            // val で n個分埋める
+            _last = _first + n;
+            rep(n) { _alloc.construct(_first + i, val); }
+        }
+        void push_back(const value_type& val);
+        void pop_back() {
+            _alloc.destroy(&_first[size() - 1]);
+            --_last;
+        }
         iterator insert(iterator position, const value_type& val);
         void     insert(iterator position, size_type n, const value_type& val);
         template<class InputIterator>
-        void     insert(iterator position, InputIterator first,
-                InputIterator last); // TODO fukadaさんと違う
+        void insert(iterator position, InputIterator first, InputIterator last);
         iterator erase(iterator position);
         iterator erase(iterator first, iterator last);
         void     swap(vector& x);
-        void     clear();
+        void     clear() {
+            size_type len = size();
+            rep(len) { pop_back(); }
+        }
 
+        // XXX allocator
         allocator_type get_allocator() const;
 
     private:
