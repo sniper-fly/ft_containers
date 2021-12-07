@@ -120,6 +120,23 @@ namespace
         rep(5) { EXPECT_TRUE(baz[i] == expect); }
     }
 
+    TEST(capacity, resize) {
+        ft::vector<my_class> res;
+        res.push_back(my_class(1, 2, 3, "a"));
+        res.push_back(my_class(4, 5, 6, "b"));
+        res.push_back(my_class(7, 8, 9, "c"));
+        res.push_back(my_class(10, 11, 12, "d"));
+        res.resize(1); // 要素を減らす
+        ft::vector<my_class> expect(1, my_class(1, 2, 3, "a"));
+        EXPECT_TRUE(res == expect);
+        res.resize(3, my_class(100, 101, 102, "aa")); // 要素を3個目まで埋める
+        rep(2) { expect.push_back(my_class(100, 101, 102, "aa")); }
+        EXPECT_TRUE(res == expect);
+        res.resize(7, my_class(100, 101, 102, "aa")); // capacityより容量を増やす
+        rep(4) { expect.push_back(my_class(100, 101, 102, "aa")); }
+        EXPECT_TRUE(res == expect);
+    }
+
     TEST(element_access, at_front_back) {
         ft::vector<int> hoge(3, 5);
         // EXPECT_DEATH(hoge.at(4), ".*");

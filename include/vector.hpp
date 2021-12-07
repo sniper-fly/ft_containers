@@ -88,7 +88,18 @@ namespace ft
         // XXX capacity
         size_type size() const { return end() - begin(); };
         size_type max_size() const;
-        void      resize(size_type n, value_type val = value_type());
+        void      resize(size_type n, value_type val = value_type()) {
+            if (n < size()) {
+                const size_type remove_amount = size() - n;
+                rep(remove_amount) { pop_back(); }
+                return;
+            }
+            const size_type fill_amount = n - size();
+            if (capacity() < n) {
+                reserve(n);
+            }
+            rep(fill_amount) { push_back(val); }
+        }
         size_type capacity() const { return _reserved_last - _first; }
         bool      empty() const { return begin() == end(); }
         void      reserve(size_type n) {
