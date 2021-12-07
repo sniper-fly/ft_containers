@@ -174,7 +174,7 @@ namespace ft
         }
 
         // XXX allocator
-        allocator_type get_allocator() const;
+        allocator_type get_allocator() const { return _alloc; }
 
     private:
         void check_range(size_type n) {
