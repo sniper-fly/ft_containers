@@ -4,7 +4,13 @@ CXXFLAGS = -g -Wall -Wextra -Werror -std=c++98 $(INCLUDE) -MMD -MP
 EXTRA_FLAGS = -Wno-unused-variable -Wno-unused-parameter
 CXXFLAGS += $(EXTRA_FLAGS)
 
-SRCS = $(shell find ./src -type f -name '*.cpp')
+ifdef debug
+SRCS = $(shell find ./src/debug -type f -name '*.cpp')
+else
+SRCS = src/main.cpp
+SRCS += $(shell find ./src/test -type f -name '*.cpp')
+endif
+
 OBJ_DIR = objects/
 OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 DEPENDS = $(OBJS:.o=.d)
@@ -39,5 +45,8 @@ re: fclean all
 
 test: all
 	$(NAME)
+
+debug:
+	make all debug=1
 
 .PHONY: all clean fclean re update_src test
