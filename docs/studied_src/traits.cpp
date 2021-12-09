@@ -45,5 +45,11 @@ int main() {
         p->put();
         a.destroy(p);
         a.deallocate(p, 1);
+
+        std::allocator<int> b;
+        int*                p_ = b.allocate(3);
+        printf("%p", &p_[1]);
+        std::cout << std::endl;
+        printf("%p", &p_[2]);
     }
 }
