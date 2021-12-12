@@ -132,7 +132,8 @@ namespace
         res.resize(3, my_class(100, 101, 102, "aa")); // 要素を3個目まで埋める
         rep(2) { expect.push_back(my_class(100, 101, 102, "aa")); }
         EXPECT_TRUE(res == expect);
-        res.resize(7, my_class(100, 101, 102, "aa")); // capacityより容量を増やす
+        res.resize(
+            7, my_class(100, 101, 102, "aa")); // capacityより容量を増やす
         rep(4) { expect.push_back(my_class(100, 101, 102, "aa")); }
         EXPECT_TRUE(res == expect);
     }
@@ -196,11 +197,42 @@ namespace
         EXPECT_TRUE(b == a_copy);
         EXPECT_TRUE(b == a_copy);
     }
+
+    TEST(modifiers, erase) {
+        {
+            ft::vector<my_class> era;
+            era.push_back(my_class(1, 2, 3, "a"));
+            era.push_back(my_class(4, 5, 6, "b"));
+            era.push_back(my_class(7, 8, 9, "c"));
+            era.push_back(my_class(10, 11, 12, "d"));
+            era.push_back(my_class(13, 14, 15, "e"));
+            era.erase(era.begin() + 2);
+            ft::vector<my_class> expect;
+            expect.push_back(my_class(1, 2, 3, "a"));
+            expect.push_back(my_class(4, 5, 6, "b"));
+            expect.push_back(my_class(10, 11, 12, "d"));
+            expect.push_back(my_class(13, 14, 15, "e"));
+            EXPECT_TRUE(era == expect);
+            std::cout << "------------------" << std::endl;
+        }
+        {
+            ft::vector<my_class> era;
+            era.push_back(my_class(1, 2, 3, "a"));
+            era.push_back(my_class(4, 5, 6, "b"));
+            era.push_back(my_class(7, 8, 9, "c"));
+            era.push_back(my_class(10, 11, 12, "d"));
+            era.push_back(my_class(13, 14, 15, "e"));
+            era.push_back(my_class(16, 17, 18, "f"));
+            era.push_back(my_class(19, 20, 21, "g"));
+            era.erase(era.begin() + 2, era.begin() + 5);
+            ft::vector<my_class> expect;
+            expect.push_back(my_class(1, 2, 3, "a"));
+            expect.push_back(my_class(4, 5, 6, "b"));
+            expect.push_back(my_class(16, 17, 18, "f"));
+            expect.push_back(my_class(19, 20, 21, "g"));
+            EXPECT_TRUE(era == expect);
+        }
+    }
     // TEST(allocator, ) {  }
 
-    TEST(vector, std_out) {
-        testing::internal::CaptureStdout();
-        std::cout << "hello" << std::endl;
-        EXPECT_STREQ("hello\n", testing::internal::GetCapturedStdout().c_str());
-    }
 } // namespace

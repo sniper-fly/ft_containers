@@ -28,9 +28,10 @@ namespace ft
         typedef vector_iterator<const_pointer>        const_iterator;
         typedef forbidden::reverse_iterator<iterator> reverse_iterator;
         typedef forbidden::reverse_iterator<const_pointer>
-                                                     const_reverse_iterator;
-        typedef forbidden::iterator_traits<iterator> difference_type;
-        typedef size_t                               size_type;
+            const_reverse_iterator;
+        typedef typename forbidden::iterator_traits<iterator>::difference_type
+                       difference_type;
+        typedef size_t size_type;
 
     private:
         pointer        _first; // 先頭の要素へのポインター
@@ -160,13 +161,41 @@ namespace ft
             _alloc.destroy(&_first[size() - 1]);
             --_last;
         }
-        iterator insert(iterator position, const value_type& val);
-        void     insert(iterator position, size_type n, const value_type& val);
-        template<class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last);
-        iterator erase(iterator position);
-        iterator erase(iterator first, iterator last);
-        void     swap(vector& x) {
+        iterator insert(iterator position, const value_type& val) {
+            if (size() == capacity()) {
+                reserve(capacity() ? capacity() * 2 : 10);
+            }
+        }
+        void insert(iterator position, size_type n, const value_type& val);
+        // template<class InputIterator>
+        // void insert(iterator position, InputIterator first, InputIterator
+        // last);
+        iterator erase(iterator position) {
+            return erase(position, position + 1);
+        }
+        iterator erase(iterator first, iterator last) {
+            const difference_type distance    = last - first;
+            iterator              delete_head = first;
+            while (delete_head != last) {
+                _alloc.destroy(&(*delete_head));
+                ++delete_head;
+            }
+            iterator concat_head = first;
+            while (concat_head + distance != end()) {
+                *concat_head = *(concat_head + distance);
+                ++concat_head;
+            }
+            _last -= distance;
+            return first;
+        }
+        // 0 1 2 3 4
+        //     2 をdelete
+        // 0 1 _ 3 4
+        // 0 1 3 3 4
+        // 0 1 3 4 _
+
+
+        void swap(vector& x) {
             pointer tmp_first         = _first;
             pointer tmp_last          = _last;
             pointer tmp_reserved_last = _reserved_last;
