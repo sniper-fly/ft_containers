@@ -12,8 +12,16 @@ public:
 
     my_class() {}
     my_class(int hoge, double fuga, float piyo, std::string foo)
-        : hoge(hoge), fuga(fuga), piyo(piyo), foo(foo) {}
-    // ~my_class() { std::cout << foo; }
+        : hoge(hoge), fuga(fuga), piyo(piyo), foo(foo) {
+        std::cout << "constructor" << std::endl;
+    }
+    ~my_class() {
+        std::cout << "destructor"
+                  << "|" << foo << std::endl;
+    }
+
+private:
+    my_class& operator=(const my_class& x);
 
     // my_class& operator=(const my_class& x) {
     //     hoge = x.hoge;
@@ -32,6 +40,8 @@ int main() {
     mine.push_back(my_class(1, 2, 3, "d"));
     std::vector<my_class>::iterator it = mine.begin();
     it++;
+    std::cout << "=======================" << std::endl;
     mine.erase(it);
-    mine.resize(5);
+    std::cout << "=======================" << std::endl;
+    // mine.resize(5);
 }
