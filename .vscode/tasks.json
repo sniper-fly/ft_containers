@@ -10,6 +10,16 @@
                 "kind": "build",
                 "isDefault": true
             }
+        },
+        {
+            "label": "Build with make debug",
+            "type": "shell",
+            "command": "make",
+            "args": ["debug"],
+            "group": {
+                "kind": "build",
+                "isDefault": true
+            }
         }
     ]
 }

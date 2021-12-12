@@ -34,13 +34,22 @@
     "version": "0.2.0",
     "configurations": [
         {
-            "name": "launch unittest with lldb",
+            "name": "launch googletest with lldb",
             "type":"lldb",
             "request": "launch",
             "program": "${workspaceFolder}/a.out",
             "args": [],
             "cwd": "${workspaceFolder}",
             "preLaunchTask": "Build with make"
+        },
+        {
+            "name": "launch debug make with lldb",
+            "type":"lldb",
+            "request": "launch",
+            "program": "${workspaceFolder}/a.out",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "preLaunchTask": "Build with make debug"
         }
     ]
 }
