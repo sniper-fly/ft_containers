@@ -3,6 +3,18 @@ INCLUDE = -I"./googletest/include" -I"./include"
 CXXFLAGS = -g -Wall -Wextra -Werror -std=c++98 $(INCLUDE) -MMD -MP
 EXTRA_FLAGS = -Wno-unused-variable -Wno-unused-parameter
 CXXFLAGS += $(EXTRA_FLAGS)
+LIBS = -lgtest -lpthread
+
+ifeq ($(shell uname),Linux)
+LIBPATH = "./googletest/1_5_0_debug"
+else
+LIBPATH = "./googletest/1_5_0mac"
+endif
+
+ifdef fsanitize
+CXXFLAGS += -fsanitize=address
+LIBPATH = "./googletest/1_5_0_fsanitize_address"
+endif
 
 ifdef debug
 SRCS = $(shell find ./src/debug -type f -name '*.cpp')
@@ -14,13 +26,6 @@ endif
 OBJ_DIR = objects/
 OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 DEPENDS = $(OBJS:.o=.d)
-
-ifeq ($(shell uname),Linux)
-LIBPATH = "./googletest/1_5_0"
-else
-LIBPATH = "./googletest/1_5_0mac"
-endif
-LIBS = -lgtest -lpthread
 
 NAME = a.out
 
