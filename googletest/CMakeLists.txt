@@ -107,6 +107,8 @@ set(cxx_no_exception
 set(cxx_default "${cxx_exception}")
 set(cxx_no_rtti "${cxx_default} ${cxx_no_rtti_flags}")
 set(cxx_use_own_tuple "${cxx_default} -DGTEST_USE_OWN_TR1_TUPLE=1")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -fsanitize=address")
+# set(CMAKE_CXX_FLAGS "${CMAKE_CXX_FLAGS} -g")
 
 # For building the gtest libraries.
 set(cxx_strict "${cxx_default} ${cxx_strict_flags}")
