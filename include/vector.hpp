@@ -162,11 +162,28 @@ namespace ft
             --_last;
         }
         iterator insert(iterator position, const value_type& val) {
-            if (size() == capacity()) {
-                reserve(capacity() ? capacity() * 2 : 10);
-            }
+            const difference_type offset = position - begin();
+            insert(position, 1, val);
+            return begin() + offset;
         }
-        void insert(iterator position, size_type n, const value_type& val);
+        void insert(iterator position, size_type n, const value_type& val) {
+            // positionはreserveの後だと使えない可能性がある
+            const size_type offset    = position - begin();
+            const size_type shift_num = end() - position;
+            reserve(size() + n);
+            const size_type new_tail = size() + n - 1;
+            const size_type old_tail = size() - 1;
+            rep(shift_num) {
+                if (new_tail - i < size()) {
+                    _first[new_tail - i] = _first[old_tail - i];
+                } else {
+                    _alloc.construct(
+                        &(_first[new_tail - i]), _first[old_tail - i]);
+                }
+            }
+            rep(n) { _first[offset + i] = val; }
+            _last += n;
+        }
         // template<class InputIterator>
         // void insert(iterator position, InputIterator first, InputIterator
         // last);
@@ -185,6 +202,7 @@ namespace ft
                 *concat_head = *(concat_head + distance);
                 ++concat_head;
             }
+            _alloc.destroy(&(*concat_head));
             _last -= distance;
             return first;
         }
@@ -193,7 +211,6 @@ namespace ft
         // 0 1 _ 3 4
         // 0 1 3 3 4
         // 0 1 3 4 _
-
 
         void swap(vector& x) {
             pointer tmp_first         = _first;

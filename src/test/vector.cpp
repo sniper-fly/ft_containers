@@ -198,6 +198,71 @@ namespace
         EXPECT_TRUE(b == a_copy);
     }
 
+    TEST(modifiers, insert) {
+        {
+            ft::vector<my_class> ins;
+            ins.push_back(my_class(0, 2, 3, "a"));
+            ins.push_back(my_class(10, 5, 6, "b"));
+            ins.push_back(my_class(20, 8, 9, "c"));
+            ins.push_back(my_class(30, 1, 2, "d"));
+            ins.push_back(my_class(40, 4, 5, "e"));
+            ft::vector<my_class>::iterator it;
+            it = ins.insert(ins.begin() + 2, my_class(11, 11, 11, "bb"));
+            ft::vector<my_class> expect;
+            expect.push_back(my_class(0, 2, 3, "a"));
+            expect.push_back(my_class(10, 5, 6, "b"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(20, 8, 9, "c"));
+            expect.push_back(my_class(30, 1, 2, "d"));
+            expect.push_back(my_class(40, 4, 5, "e"));
+            EXPECT_TRUE(ins == expect);
+        }
+        {
+            ft::vector<my_class> ins;
+            ins.push_back(my_class(0, 2, 3, "a"));
+            ins.push_back(my_class(10, 5, 6, "b"));
+            ins.push_back(my_class(20, 8, 9, "c"));
+            ins.push_back(my_class(30, 1, 2, "d"));
+            ins.push_back(my_class(40, 4, 5, "e"));
+            ft::vector<my_class>::iterator it;
+            ins.insert(ins.begin() + 2, 5, my_class(11, 11, 11, "bb"));
+            ft::vector<my_class> expect;
+            expect.push_back(my_class(0, 2, 3, "a"));
+            expect.push_back(my_class(10, 5, 6, "b"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(20, 8, 9, "c"));
+            expect.push_back(my_class(30, 1, 2, "d"));
+            expect.push_back(my_class(40, 4, 5, "e"));
+            EXPECT_TRUE(ins == expect);
+        }
+        {
+            ft::vector<my_class> ins;
+            ins.push_back(my_class(0, 2, 3, "a"));
+            ins.push_back(my_class(10, 5, 6, "b"));
+            ins.push_back(my_class(20, 8, 9, "c"));
+            ins.push_back(my_class(30, 1, 2, "d"));
+            ins.push_back(my_class(40, 4, 5, "e"));
+            ft::vector<my_class>::iterator it;
+            ins.insert(ins.end() - 1, 5, my_class(11, 11, 11, "bb"));
+            ft::vector<my_class> expect;
+            expect.push_back(my_class(0, 2, 3, "a"));
+            expect.push_back(my_class(10, 5, 6, "b"));
+            expect.push_back(my_class(20, 8, 9, "c"));
+            expect.push_back(my_class(30, 1, 2, "d"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(11, 11, 11, "bb"));
+            expect.push_back(my_class(40, 4, 5, "e"));
+            EXPECT_TRUE(ins == expect);
+        }
+    }
+
     TEST(modifiers, erase) {
         {
             ft::vector<my_class> era;
@@ -213,7 +278,6 @@ namespace
             expect.push_back(my_class(10, 11, 12, "d"));
             expect.push_back(my_class(13, 14, 15, "e"));
             EXPECT_TRUE(era == expect);
-            std::cout << "------------------" << std::endl;
         }
         {
             ft::vector<my_class> era;
