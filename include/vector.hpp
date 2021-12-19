@@ -88,7 +88,7 @@ namespace ft
 
         // XXX capacity
         size_type size() const { return end() - begin(); };
-        size_type max_size() const;
+        size_type max_size() const { return _alloc.max_size(); }
         void      resize(size_type n, value_type val = value_type()) {
             if (n < size()) {
                 const size_type remove_amount = size() - n;
@@ -206,12 +206,6 @@ namespace ft
             _last -= distance;
             return first;
         }
-        // 0 1 2 3 4
-        //     2 をdelete
-        // 0 1 _ 3 4
-        // 0 1 3 3 4
-        // 0 1 3 4 _
-
         void swap(vector& x) {
             pointer tmp_first         = _first;
             pointer tmp_last          = _last;

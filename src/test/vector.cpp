@@ -108,6 +108,12 @@ namespace
         EXPECT_TRUE(NOT piyo.empty());
     }
 
+    TEST(capacity, max_size) {
+        ft::vector<int>  mine;
+        std::vector<int> expect;
+        EXPECT_TRUE(mine.max_size() == expect.max_size());
+    }
+
     TEST(capacity, reserve) {
         ft::vector<my_class> bar(5, my_class(1, 2, 3, "a"));
         ft::vector<my_class> baz(5, my_class(1, 2, 3, "a"));
