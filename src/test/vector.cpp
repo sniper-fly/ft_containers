@@ -124,6 +124,16 @@ namespace
         baz.reserve(2);
         EXPECT_TRUE(baz.capacity() == 5);
         rep(5) { EXPECT_TRUE(baz[i] == expect); }
+        bool has_error = false;
+        try {
+            baz.reserve(baz.max_size() + 1);
+        } catch (std::exception& e) {
+            std::cout << "------------------" << std::endl;
+            std::cout << e.what() << std::endl;
+            std::cout << "------------------" << std::endl;
+            has_error = true;
+        }
+        EXPECT_TRUE(has_error);
     }
 
     TEST(capacity, resize) {

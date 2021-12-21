@@ -7,6 +7,7 @@
 #include "vector_iterator.hpp"
 #include <stdexcept>
 #include <sstream>
+#include "type_traits.hpp"
 
 // TODO
 namespace forbidden = std;
@@ -104,9 +105,9 @@ namespace ft
         size_type capacity() const { return _reserved_last - _first; }
         bool      empty() const { return begin() == end(); }
         void      reserve(size_type n) {
-            // max_sizeより大きかったら
-            //'std::length_error' what(): vector::reserve
-            //上記のエラーを吐く
+            if (n > max_size()) {
+                throw std::length_error("vector::reserve");
+            }
             if (n <= capacity()) {
                 return;
             }
