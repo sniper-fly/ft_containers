@@ -279,6 +279,14 @@ namespace
         }
     }
 
+    TEST(modifiers, insert_range) {
+        ft::vector<my_class>           ins(3, my_class(2, 2, 2, "b"));
+        ft::vector<my_class>           inserted(3, my_class(1, 1, 1, "a"));
+        ft::vector<my_class>           expect;
+        ft::vector<my_class>::iterator it = inserted.end();
+        inserted.insert(it, ins.begin(), ins.end());
+    }
+
     TEST(modifiers, erase) {
         {
             ft::vector<my_class> era;

@@ -185,9 +185,17 @@ namespace ft
             rep(n) { _first[offset + i] = val; }
             _last += n;
         }
-        // template<class InputIterator>
-        // void insert(iterator position, InputIterator first, InputIterator
-        // last);
+        template<class InputIterator>
+        void insert(iterator         position,
+            typename ft::enable_if<! ft::is_integral<InputIterator>::value,
+                InputIterator>::type first,
+            InputIterator            last) {
+            std::cout << "range insert called" << std::endl;
+            (void)position;
+            (void)first;
+            (void)last;
+        }
+
         iterator erase(iterator position) {
             return erase(position, position + 1);
         }
