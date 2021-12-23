@@ -41,11 +41,12 @@ namespace ft
     template<class T, T v>
     struct integral_constant
     {
-        static const T            value = v;
-        typedef T                 value_type;
-        typedef integral_constant type;
-                                  operator T() { return v; }
+        static const T                  value = v;
+        typedef T                       value_type;
+        typedef integral_constant<T, v> type;
+                                        operator T() { return v; }
     };
+
     typedef integral_constant<bool, true>  true_type;
     typedef integral_constant<bool, false> false_type;
 
@@ -59,6 +60,10 @@ namespace ft
     };
     template<>
     struct is_integral_helper<char> : public true_type
+    {
+    };
+    template<>
+    struct is_integral_helper<wchar_t> : public true_type
     {
     };
     template<>
@@ -98,6 +103,14 @@ namespace ft
     struct is_integral : public is_integral_helper<typename remove_cv<T>::type>
     {
     };
+
+    // is_integral
+
+    // --> is_integral_helper
+    // 型によってtrue_typeかfalse_typeのをどちらを継承するか
+
+    // --> integral_constant(true_type or false_type)
+    // 基本の型
 } // namespace ft
 
 #endif

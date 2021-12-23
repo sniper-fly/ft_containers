@@ -67,6 +67,11 @@ namespace
         EXPECT_TRUE(original == copied);
     }
 
+    TEST(Constructor, range) {
+        int             sample[] = { 0, 1, 2, 3, 4 };
+        ft::vector<int> ran(sample, sample + 3);
+    }
+
     TEST(destructor, _) {
         std::cout << "----- destructor output test ------" << std::endl;
         my_class::should_output_destructor_msg = true;

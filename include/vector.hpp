@@ -53,9 +53,13 @@ namespace ft
             _reserved_last = _last;
             rep(n) { _alloc.construct(_first + i, val); }
         } /* range */
-        // template<class InputIterator>
-        // vector(InputIterator first, InputIterator last,
-        //     const allocator_type& alloc = allocator_type());
+        template<class InputIterator>
+        vector(typename ft::enable_if<! ft::is_integral<InputIterator>::value,
+                   InputIterator>::type first,
+            InputIterator last, const allocator_type& alloc = allocator_type())
+            : _first(NULL), _last(NULL), _reserved_last(NULL), _alloc(alloc) {
+            std::cout << "range constructor called" << std::endl;
+        }
         /* copy */
         vector(const vector& x)
             : _first(NULL), _last(NULL), _reserved_last(NULL),
