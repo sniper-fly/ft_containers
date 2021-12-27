@@ -59,6 +59,7 @@ namespace ft
             InputIterator last, const allocator_type& alloc = allocator_type())
             : _first(NULL), _last(NULL), _reserved_last(NULL), _alloc(alloc) {
             std::cout << "range constructor called" << std::endl;
+            reserve(std::distance(first, last));
         }
         /* copy */
         vector(const vector& x)
@@ -156,9 +157,7 @@ namespace ft
             rep(n) { _alloc.construct(_first + i, val); }
         }
         void push_back(const value_type& val) {
-            if (size() == capacity()) {
-                reserve(capacity() ? capacity() * 2 : 10);
-            }
+            reserve(recalc_cap_if_over(size() + 1));
             _alloc.construct(_last, val);
             ++_last;
         }
@@ -173,19 +172,10 @@ namespace ft
         }
         void insert(iterator position, size_type n, const value_type& val) {
             // positionはreserveの後だと使えない可能性がある
-            const size_type offset    = position - begin();
-            const size_type shift_num = end() - position;
-            reserve(size() + n);
-            const size_type new_tail = size() + n - 1;
-            const size_type old_tail = size() - 1;
-            rep(shift_num) {
-                if (new_tail - i < size()) {
-                    _first[new_tail - i] = _first[old_tail - i];
-                } else {
-                    _alloc.construct(
-                        &(_first[new_tail - i]), _first[old_tail - i]);
-                }
-            }
+            const size_type offset      = position - begin();
+            const size_type shift_times = end() - position;
+            reserve(recalc_cap_if_over(size() + n));
+            shift_to_right(shift_times, n);
             rep(n) { _first[offset + i] = val; }
             _last += n;
         }
@@ -195,9 +185,17 @@ namespace ft
                 InputIterator>::type first,
             InputIterator            last) {
             std::cout << "range insert called" << std::endl;
-            (void)position;
-            (void)first;
-            (void)last;
+            // const difference_type offset    = position - begin();
+            // const difference_type shift_num = end() - position;
+            // const difference_type distance  = std::distance(first, last);
+            // if (size() + distance > capacity()) {
+            //     reserve(recalc_cap_if_over(size() + distance));
+            // }
+            // const size_type new_tail = size() + distance - 1;
+            // const size_type old_tail = size() - 1;
+            // rep(shift_num) {
+            //     //
+            // }
         }
 
         iterator erase(iterator position) {
@@ -255,8 +253,27 @@ namespace ft
             ss << number;
             return ss.str();
         }
-        /////////// debug func /////////////////////
-        ////////////////////////////////////////////
+        size_type recalc_cap_if_over(size_type new_size) {
+            if (new_size <= capacity()) {
+                return capacity();
+            }
+            if (new_size <= 1) {
+                return 10;
+            }
+            return std::min(new_size * 2, max_size());
+        }
+        void shift_to_right(size_type times, size_type num_to_insert) {
+            const size_type new_tail = size() + num_to_insert - 1;
+            const size_type old_tail = size() - 1;
+            rep(times) {
+                if (new_tail - i < size()) {
+                    _first[new_tail - i] = _first[old_tail - i];
+                } else {
+                    _alloc.construct(
+                        &(_first[new_tail - i]), _first[old_tail - i]);
+                }
+            }
+        }
     };
 
     // vector: Non-member functions
