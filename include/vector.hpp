@@ -58,8 +58,8 @@ namespace ft
                    InputIterator>::type first,
             InputIterator last, const allocator_type& alloc = allocator_type())
             : _first(NULL), _last(NULL), _reserved_last(NULL), _alloc(alloc) {
-            std::cout << "range constructor called" << std::endl;
             reserve(std::distance(first, last));
+            insert(begin(), first, last);
         }
         /* copy */
         vector(const vector& x)
@@ -190,6 +190,9 @@ namespace ft
             typename ft::enable_if<! ft::is_integral<InputIterator>::value,
                 InputIterator>::type first,
             InputIterator            last) {
+            if (first > last) {
+                throw std::length_error("vector:insert");
+            }
             const difference_type offset        = position - begin();
             const difference_type shift_times   = end() - position;
             const difference_type distance      = std::distance(first, last);

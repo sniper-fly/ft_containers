@@ -73,8 +73,30 @@ namespace
     }
 
     TEST(Constructor, range) {
-        int             sample[] = { 0, 1, 2, 3, 4 };
-        ft::vector<int> ran(sample, sample + 3);
+        {
+            int             sample[] = { 0, 1, 2, 3, 4 };
+            ft::vector<int> ran(sample, sample + 3);
+            rep(4) { EXPECT_TRUE(ran[i] == sample[i]); }
+        }
+        {
+            ft::vector<my_class> expect;
+            push_back_serial_number(expect, 10, 17);
+            ft::vector<my_class> ran(expect.begin(), expect.end());
+            EXPECT_TRUE(expect == ran);
+        }
+        {
+            ft::vector<my_class> expect;
+            push_back_serial_number(expect, 10, 17);
+            ft::vector<my_class> ran(expect.begin(), expect.end() - 4);
+            rep(4) { expect.pop_back(); }
+            EXPECT_TRUE(expect == ran);
+        }
+        {
+            int             sample[] = { 10, 11, 12, 13, 14 };
+            ft::vector<int> expect;
+            expect.insert(expect.begin(), sample, sample);
+            EXPECT_TRUE(expect[0] == sample[0]);
+        }
     }
 
     TEST(destructor, _) {
