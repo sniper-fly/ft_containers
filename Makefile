@@ -43,10 +43,10 @@ $(OBJ_DIR)%.o: %.cpp
 -include $(DEPENDS)
 
 clean:
-	rm -rf $(OBJS) $(DEPENDS) $(COVFILES)
+	rm -rf $(OBJS) $(DEPENDS)
 
 fclean: clean
-	rm -rf $(NAME)
+	rm -rf $(NAME) $(COVFILES)
 
 re: fclean all
 
@@ -67,6 +67,7 @@ coverage:
 	lcov -c -b . -d . -o cov_test.info
 	lcov -r cov_test.info "*/googletest/*" "*/c++/*" -o coverageFiltered.info
 	genhtml coverageFiltered.info -o cov_test
+	make clean
 
 open:
 	xdg-open cov_test/index.html
