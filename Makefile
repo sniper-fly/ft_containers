@@ -56,8 +56,6 @@ test: all
 debug:
 	make all debug=1
 
-.PHONY: all clean fclean re update_src test coverage
-
 ifdef cov
 CXX = g++
 CXXFLAGS += -ftest-coverage -fprofile-arcs -lgcov
@@ -69,3 +67,8 @@ coverage:
 	lcov -c -b . -d . -o cov_test.info
 	lcov -r cov_test.info "*/googletest/*" "*/c++/*" -o coverageFiltered.info
 	genhtml coverageFiltered.info -o cov_test
+
+open:
+	xdg-open cov_test/index.html
+
+.PHONY: all clean fclean re update_src test coverage open
