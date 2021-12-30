@@ -27,6 +27,8 @@ OBJ_DIR = objects/
 OBJS = $(addprefix $(OBJ_DIR), $(SRCS:.cpp=.o))
 DEPENDS = $(OBJS:.o=.d)
 
+COVFILES = $(OBJS:.o=.gcda) $(OBJS:.o=.gcno) cov_test.info coverageFiltered.info
+
 NAME = a.out
 
 all: $(NAME)
@@ -41,7 +43,7 @@ $(OBJ_DIR)%.o: %.cpp
 -include $(DEPENDS)
 
 clean:
-	rm -rf $(OBJS) $(DEPENDS)
+	rm -rf $(OBJS) $(DEPENDS) $(COVFILES)
 
 fclean: clean
 	rm -rf $(NAME)
@@ -54,4 +56,16 @@ test: all
 debug:
 	make all debug=1
 
-.PHONY: all clean fclean re update_src test
+.PHONY: all clean fclean re update_src test coverage
+
+ifdef cov
+CXX = g++
+CXXFLAGS += -ftest-coverage -fprofile-arcs -lgcov
+endif
+
+coverage:
+	make re cov=1
+	./$(NAME)
+	lcov -c -b . -d . -o cov_test.info
+	lcov -r cov_test.info "*/googletest/*" "*/c++/*" -o coverageFiltered.info
+	genhtml coverageFiltered.info -o cov_test
