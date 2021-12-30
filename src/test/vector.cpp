@@ -44,6 +44,11 @@ namespace
         return NOT(lhs == rhs);
     }
 
+    void push_back_serial_number(ft::vector<my_class>& v, int from, int last) {
+        for (int i = from; i <= last; ++i) {
+            v.push_back(my_class(i, i, i, "serial"));
+        }
+    }
 
     ft::vector<int>      hoge;
     ft::vector<int>      fuga(3, 42);
@@ -282,14 +287,35 @@ namespace
             expect.push_back(my_class(40, 4, 5, "e"));
             EXPECT_TRUE(ins == expect);
         }
+        {
+            ft::vector<my_class> ins;
+            ft::vector<my_class> expect;
+            ins.insert(ins.begin(), 11, my_class(1, 2, 3, "abc"));
+            rep(11) { expect.push_back(my_class(1, 2, 3, "abc")); }
+            EXPECT_TRUE(ins == expect);
+        }
     }
 
     TEST(modifiers, insert_range) {
-        ft::vector<my_class>           ins(3, my_class(2, 2, 2, "b"));
-        ft::vector<my_class>           inserted(3, my_class(1, 1, 1, "a"));
-        ft::vector<my_class>           expect;
-        ft::vector<my_class>::iterator it = inserted.end();
-        inserted.insert(it, ins.begin(), ins.end());
+        {
+            ft::vector<my_class> needle;
+            push_back_serial_number(needle, 10, 13);
+            ft::vector<my_class> inserted;
+            push_back_serial_number(inserted, 0, 6);
+            ft::vector<my_class>::iterator it = inserted.end();
+            inserted.insert(it, needle.begin(), needle.end());
+            ft::vector<my_class> expect;
+            push_back_serial_number(expect, 0, 6);
+            push_back_serial_number(expect, 10, 13);
+            EXPECT_TRUE(inserted == expect);
+        }
+        {
+            ft::vector<my_class> needle;
+            push_back_serial_number(needle, 10, 13);
+            ft::vector<my_class> inserted;
+            inserted.insert(inserted.begin(), needle.begin(), needle.end());
+            EXPECT_TRUE(inserted == needle);
+        }
     }
 
     TEST(modifiers, erase) {

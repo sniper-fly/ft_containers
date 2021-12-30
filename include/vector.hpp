@@ -176,7 +176,13 @@ namespace ft
             const size_type shift_times = end() - position;
             reserve(recalc_cap_if_over(size() + n));
             shift_to_right(shift_times, n);
-            rep(n) { _first[offset + i] = val; }
+            rep(n) {
+                if (i < size()) {
+                    _first[offset + i] = val;
+                } else {
+                    _alloc.construct(&(_first[offset + i]), val);
+                }
+            }
             _last += n;
         }
         template<class InputIterator>
@@ -184,20 +190,23 @@ namespace ft
             typename ft::enable_if<! ft::is_integral<InputIterator>::value,
                 InputIterator>::type first,
             InputIterator            last) {
-            std::cout << "range insert called" << std::endl;
-            // const difference_type offset    = position - begin();
-            // const difference_type shift_num = end() - position;
-            // const difference_type distance  = std::distance(first, last);
-            // if (size() + distance > capacity()) {
-            //     reserve(recalc_cap_if_over(size() + distance));
-            // }
-            // const size_type new_tail = size() + distance - 1;
-            // const size_type old_tail = size() - 1;
-            // rep(shift_num) {
-            //     //
-            // }
+            const difference_type offset        = position - begin();
+            const difference_type shift_times   = end() - position;
+            const difference_type distance      = std::distance(first, last);
+            const size_type       num_to_insert = distance + 1;
+            reserve(recalc_cap_if_over(size() + num_to_insert));
+            shift_to_right(shift_times, num_to_insert);
+            rep(num_to_insert) {
+                if (i < size()) {
+                    _first[offset + i] = *first;
+                } else {
+                    _alloc.construct(&(_first[offset + i]), *first);
+                }
+                // ここも空の配列が来たときなどは初期化を想定しないと駄目
+                ++first;
+            }
+            _last += distance;
         }
-
         iterator erase(iterator position) {
             return erase(position, position + 1);
         }
