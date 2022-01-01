@@ -92,10 +92,10 @@ namespace
             EXPECT_TRUE(expect == ran);
         }
         {
+            // make sure it does not throw an error
             int             sample[] = { 10, 11, 12, 13, 14 };
             ft::vector<int> expect;
             expect.insert(expect.begin(), sample, sample);
-            EXPECT_TRUE(expect[0] == sample[0]);
         }
     }
 
@@ -372,6 +372,10 @@ namespace
             expect.push_back(my_class(16, 17, 18, "f"));
             expect.push_back(my_class(19, 20, 21, "g"));
             EXPECT_TRUE(era == expect);
+        }
+        {
+            ft::vector<my_class> era;
+            era.erase(era.begin(), era.end());
         }
     }
     // TEST(allocator, ) {  }

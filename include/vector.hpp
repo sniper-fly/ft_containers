@@ -193,6 +193,9 @@ namespace ft
             if (first > last) {
                 throw std::length_error("vector:insert");
             }
+            if (first == last) {
+                return;
+            }
             const difference_type offset        = position - begin();
             const difference_type shift_times   = end() - position;
             const difference_type distance      = std::distance(first, last);
@@ -200,7 +203,7 @@ namespace ft
             reserve(recalc_cap_if_over(size() + num_to_insert));
             shift_to_right(shift_times, num_to_insert);
             rep(num_to_insert) {
-                if (i < size()) {
+                if (offset + i < size()) {
                     _first[offset + i] = *first;
                 } else {
                     _alloc.construct(&(_first[offset + i]), *first);
@@ -214,6 +217,12 @@ namespace ft
             return erase(position, position + 1);
         }
         iterator erase(iterator first, iterator last) {
+            if (first > last) {
+                throw std::length_error("vector:erase");
+            }
+            if (first == last) {
+                return first;
+            }
             const difference_type distance    = last - first;
             iterator              delete_head = first;
             while (delete_head != last) {
@@ -306,13 +315,21 @@ namespace ft
         return NOT(lhs == rhs);
     }
     template<class T, class Alloc>
-    bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return true;
+    }
     template<class T, class Alloc>
-    bool operator<=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator<=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return true;
+    }
     template<class T, class Alloc>
-    bool operator>(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator>(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return true;
+    }
     template<class T, class Alloc>
-    bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return true;
+    }
     template<class T, class Alloc>
     void swap(vector<T, Alloc>& x, vector<T, Alloc>& y) {}
 } // namespace ft
