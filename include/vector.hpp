@@ -7,6 +7,7 @@
 #include "vector_iterator.hpp"
 #include <stdexcept>
 #include <sstream>
+#include "type_traits.hpp"
 
 // TODO
 namespace forbidden = std;
@@ -28,9 +29,10 @@ namespace ft
         typedef vector_iterator<const_pointer>        const_iterator;
         typedef forbidden::reverse_iterator<iterator> reverse_iterator;
         typedef forbidden::reverse_iterator<const_pointer>
-                                                     const_reverse_iterator;
-        typedef forbidden::iterator_traits<iterator> difference_type;
-        typedef size_t                               size_type;
+            const_reverse_iterator;
+        typedef typename forbidden::iterator_traits<iterator>::difference_type
+                       difference_type;
+        typedef size_t size_type;
 
     private:
         pointer        _first; // 先頭の要素へのポインター
@@ -51,9 +53,14 @@ namespace ft
             _reserved_last = _last;
             rep(n) { _alloc.construct(_first + i, val); }
         } /* range */
-        // template<class InputIterator>
-        // vector(InputIterator first, InputIterator last,
-        //     const allocator_type& alloc = allocator_type());
+        template<class InputIterator>
+        vector(typename ft::enable_if<! ft::is_integral<InputIterator>::value,
+                   InputIterator>::type first,
+            InputIterator last, const allocator_type& alloc = allocator_type())
+            : _first(NULL), _last(NULL), _reserved_last(NULL), _alloc(alloc) {
+            reserve(std::distance(first, last));
+            insert(begin(), first, last);
+        }
         /* copy */
         vector(const vector& x)
             : _first(NULL), _last(NULL), _reserved_last(NULL),
@@ -87,14 +94,25 @@ namespace ft
 
         // XXX capacity
         size_type size() const { return end() - begin(); };
-        size_type max_size() const;
-        void      resize(size_type n, value_type val = value_type());
+        size_type max_size() const { return _alloc.max_size(); }
+        void      resize(size_type n, value_type val = value_type()) {
+            if (n < size()) {
+                const size_type remove_amount = size() - n;
+                rep(remove_amount) { pop_back(); }
+                return;
+            }
+            const size_type fill_amount = n - size();
+            if (capacity() < n) {
+                reserve(n);
+            }
+            rep(fill_amount) { push_back(val); }
+        }
         size_type capacity() const { return _reserved_last - _first; }
         bool      empty() const { return begin() == end(); }
         void      reserve(size_type n) {
-            // max_sizeより大きかったら
-            //'std::length_error' what(): vector::reserve
-            //上記のエラーを吐く
+            if (n > max_size()) {
+                throw std::length_error("vector::reserve");
+            }
             if (n <= capacity()) {
                 return;
             }
@@ -127,8 +145,16 @@ namespace ft
         const_reference back() const { return *(end() - 1); }
 
         // XXX modifiers
+
         template<class InputIterator>
-        void assign(InputIterator first, InputIterator last);
+        void assign(
+            typename ft::enable_if<! ft::is_integral<InputIterator>::value,
+                InputIterator>::type first,
+            InputIterator            last) {
+            clear();
+            insert(begin(), first, last);
+        }
+
         void assign(size_type n, const T& val) {
             clear();
             if (n > capacity()) {
@@ -139,9 +165,7 @@ namespace ft
             rep(n) { _alloc.construct(_first + i, val); }
         }
         void push_back(const value_type& val) {
-            if (size() == capacity()) {
-                reserve(capacity() ? capacity() * 2 : 10);
-            }
+            reserve(recalc_cap_if_over(size() + 1));
             _alloc.construct(_last, val);
             ++_last;
         }
@@ -149,13 +173,80 @@ namespace ft
             _alloc.destroy(&_first[size() - 1]);
             --_last;
         }
-        iterator insert(iterator position, const value_type& val);
-        void     insert(iterator position, size_type n, const value_type& val);
+        iterator insert(iterator position, const value_type& val) {
+            const difference_type offset = position - begin();
+            insert(position, 1, val);
+            return begin() + offset;
+        }
+        void insert(iterator position, size_type n, const value_type& val) {
+            // positionはreserveの後だと使えない可能性がある
+            const size_type offset      = position - begin();
+            const size_type shift_times = end() - position;
+            reserve(recalc_cap_if_over(size() + n));
+            shift_to_right(shift_times, n);
+            rep(n) {
+                if (i < size()) {
+                    _first[offset + i] = val;
+                } else {
+                    _alloc.construct(&(_first[offset + i]), val);
+                }
+            }
+            _last += n;
+        }
         template<class InputIterator>
-        void insert(iterator position, InputIterator first, InputIterator last);
-        iterator erase(iterator position);
-        iterator erase(iterator first, iterator last);
-        void     swap(vector& x) {
+        void insert(iterator         position,
+            typename ft::enable_if<! ft::is_integral<InputIterator>::value,
+                InputIterator>::type first,
+            InputIterator            last) {
+            if (first > last) {
+                throw std::length_error("vector:insert");
+            }
+            if (first == last) {
+                return;
+            }
+            const difference_type offset        = position - begin();
+            const difference_type shift_times   = end() - position;
+            const difference_type distance      = std::distance(first, last);
+            const size_type       num_to_insert = distance + 1;
+            reserve(recalc_cap_if_over(size() + num_to_insert));
+            shift_to_right(shift_times, num_to_insert);
+            rep(num_to_insert) {
+                if (offset + i < size()) {
+                    _first[offset + i] = *first;
+                } else {
+                    _alloc.construct(&(_first[offset + i]), *first);
+                }
+                // ここも空の配列が来たときなどは初期化を想定しないと駄目
+                ++first;
+            }
+            _last += distance;
+        }
+        iterator erase(iterator position) {
+            return erase(position, position + 1);
+        }
+        iterator erase(iterator first, iterator last) {
+            if (first > last) {
+                throw std::length_error("vector:erase");
+            }
+            if (first == last) {
+                return first;
+            }
+            const difference_type distance    = last - first;
+            iterator              delete_head = first;
+            while (delete_head != last) {
+                _alloc.destroy(&(*delete_head));
+                ++delete_head;
+            }
+            iterator concat_head = first;
+            while (concat_head + distance != end()) {
+                *concat_head = *(concat_head + distance);
+                ++concat_head;
+            }
+            _alloc.destroy(&(*concat_head));
+            _last -= distance;
+            return first;
+        }
+        void swap(vector& x) {
             pointer tmp_first         = _first;
             pointer tmp_last          = _last;
             pointer tmp_reserved_last = _reserved_last;
@@ -174,7 +265,7 @@ namespace ft
         }
 
         // XXX allocator
-        allocator_type get_allocator() const;
+        allocator_type get_allocator() const { return _alloc; }
 
     private:
         void check_range(size_type n) {
@@ -191,8 +282,27 @@ namespace ft
             ss << number;
             return ss.str();
         }
-        /////////// debug func /////////////////////
-        ////////////////////////////////////////////
+        size_type recalc_cap_if_over(size_type new_size) {
+            if (new_size <= capacity()) {
+                return capacity();
+            }
+            if (new_size <= 1) {
+                return 10;
+            }
+            return std::min(new_size * 2, max_size());
+        }
+        void shift_to_right(size_type times, size_type num_to_insert) {
+            const size_type new_tail = size() + num_to_insert - 1;
+            const size_type old_tail = size() - 1;
+            rep(times) {
+                if (new_tail - i < size()) {
+                    _first[new_tail - i] = _first[old_tail - i];
+                } else {
+                    _alloc.construct(
+                        &(_first[new_tail - i]), _first[old_tail - i]);
+                }
+            }
+        }
     };
 
     // vector: Non-member functions
@@ -213,13 +323,21 @@ namespace ft
         return NOT(lhs == rhs);
     }
     template<class T, class Alloc>
-    bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return true;
+    }
     template<class T, class Alloc>
-    bool operator<=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator<=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return true;
+    }
     template<class T, class Alloc>
-    bool operator>(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator>(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return true;
+    }
     template<class T, class Alloc>
-    bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {}
+    bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
+        return true;
+    }
     template<class T, class Alloc>
     void swap(vector<T, Alloc>& x, vector<T, Alloc>& y) {}
 } // namespace ft

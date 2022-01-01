@@ -1,4 +1,9 @@
-.vscode
 *.o
 *.d
 a.out
+.gdb_history
+cov_test
+*.gcda
+*.gcno
+cov_test.info
+coverageFiltered.info

@@ -10,6 +10,11 @@
 12/6 ~ 13 stackの実装  
 12/14 ~ 28 mapの実装  
 
+12/31 ~ 1/3 境界値テストの追加、reverse ite, iterator_traits
+1/4 ~ 1/6   見直し vector完成
+1/7 ~ 1/10  stack
+1/11 ~ 1/13 赤黒木の理解
+1/14 ~ 1/17 mapの実装方針
 
 ## ブランチ運用
 masterとdevelopで運用  
