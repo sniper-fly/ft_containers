@@ -145,8 +145,16 @@ namespace ft
         const_reference back() const { return *(end() - 1); }
 
         // XXX modifiers
+
         template<class InputIterator>
-        void assign(InputIterator first, InputIterator last);
+        void assign(
+            typename ft::enable_if<! ft::is_integral<InputIterator>::value,
+                InputIterator>::type first,
+            InputIterator            last) {
+            clear();
+            insert(begin(), first, last);
+        }
+
         void assign(size_type n, const T& val) {
             clear();
             if (n > capacity()) {

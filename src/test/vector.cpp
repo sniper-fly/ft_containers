@@ -213,6 +213,15 @@ namespace
         EXPECT_TRUE(modi == expect2);
     }
 
+    TEST(modifiers, assign_range) {
+        ft::vector<my_class> ass(10, my_class(42, 42, 42, "42"));
+        ft::vector<my_class> expect;
+
+        push_back_serial_number(expect, 0, 11);
+        ass.assign(expect.begin(), expect.end());
+        EXPECT_TRUE(ass == expect);
+    }
+
     TEST(modifiers, clear) {
         ft::vector<my_class> cle(3, my_class(1, 2, 3, "a"));
         cle.clear();
