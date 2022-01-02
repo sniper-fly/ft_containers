@@ -28,7 +28,7 @@ namespace ft
         typedef vector_iterator<pointer>              iterator;
         typedef vector_iterator<const_pointer>        const_iterator;
         typedef forbidden::reverse_iterator<iterator> reverse_iterator;
-        typedef forbidden::reverse_iterator<const_pointer>
+        typedef forbidden::reverse_iterator<const_iterator>
             const_reverse_iterator;
         typedef typename forbidden::iterator_traits<iterator>::difference_type
                        difference_type;
@@ -83,14 +83,19 @@ namespace ft
         }
 
         // XXX iterators
-        iterator               begin() { return iterator(_first); }
-        const_iterator         begin() const { return const_iterator(_first); }
-        iterator               end() { return iterator(_last); }
-        const_iterator         end() const { return const_iterator(_last); }
-        reverse_iterator       rbegin() {}
-        const_reverse_iterator rbegin() const {}
-        reverse_iterator       rend() {}
-        const_reverse_iterator rend() const {}
+        iterator       begin() { return iterator(_first); }
+        const_iterator begin() const { return const_iterator(_first); }
+        iterator       end() { return iterator(_last); }
+        const_iterator end() const { return const_iterator(_last); }
+
+        reverse_iterator rbegin() { return reverse_iterator(iterator(_last)); }
+        const_reverse_iterator rbegin() const {
+            return const_reverse_iterator(const_iterator(_last));
+        }
+        reverse_iterator rend() { return reverse_iterator(iterator(_first)); }
+        const_reverse_iterator rend() const {
+            return const_reverse_iterator(const_iterator(_first));
+        }
 
         // XXX capacity
         size_type size() const { return end() - begin(); };

@@ -129,7 +129,47 @@ namespace
         EXPECT_TRUE(opeq == copied);
         EXPECT_TRUE(opeq.capacity() == copied.capacity());
     }
-    // TEST(iterators, ) {  }
+
+    TEST(iterators, begin_end_r) {
+        ft::vector<my_class> beg;
+        push_back_serial_number(beg, 0, 10);
+        {
+            ft::vector<my_class>::iterator it = beg.begin();
+            size_t                         i  = 0;
+            while (it != beg.end()) {
+                EXPECT_TRUE(*it == my_class(i, i, i, "serial"));
+                ++i;
+                ++it;
+            }
+        }
+        {
+            ft::vector<my_class>::const_iterator it = beg.begin();
+            size_t                               i  = 0;
+            while (it != beg.end()) {
+                EXPECT_TRUE(*it == my_class(i, i, i, "serial"));
+                ++i;
+                ++it;
+            }
+        }
+        {
+            ft::vector<my_class>::reverse_iterator it = beg.rbegin();
+            size_t                                 i  = 0;
+            while (it != beg.rend()) {
+                EXPECT_TRUE(*it == my_class(10 - i, 10 - i, 10 - i, "serial"));
+                ++i;
+                ++it;
+            }
+        }
+        {
+            ft::vector<my_class>::const_reverse_iterator it = beg.rbegin();
+            size_t                                       i  = 0;
+            while (it != beg.rend()) {
+                EXPECT_TRUE(*it == my_class(10 - i, 10 - i, 10 - i, "serial"));
+                ++i;
+                ++it;
+            }
+        }
+    }
 
     TEST(capacity, size_capacity_empty) {
         EXPECT_TRUE(fuga.size() == 3);
