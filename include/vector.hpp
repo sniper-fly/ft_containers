@@ -247,17 +247,9 @@ namespace ft
             return first;
         }
         void swap(vector& x) {
-            pointer tmp_first         = _first;
-            pointer tmp_last          = _last;
-            pointer tmp_reserved_last = _reserved_last;
-
-            _first         = x._first;
-            _last          = x._last;
-            _reserved_last = x._reserved_last;
-
-            x._first         = tmp_first;
-            x._last          = tmp_last;
-            x._reserved_last = tmp_reserved_last;
+            swap_ptr(this->_first, x._first);
+            swap_ptr(this->_last, x._last);
+            swap_ptr(this->_reserved_last, x._reserved_last);
         }
         void clear() {
             size_type len = size();
@@ -302,6 +294,11 @@ namespace ft
                         &(_first[new_tail - i]), _first[old_tail - i]);
                 }
             }
+        }
+        void swap_ptr(pointer& a, pointer& b) {
+            pointer tmp_a = a;
+            a             = b;
+            b             = tmp_a;
         }
     };
 
