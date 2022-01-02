@@ -48,7 +48,6 @@ namespace ft
             current_elem++;
             return tmp;
         }
-        // prefix/postfix decrement
         vector_iterator& operator--() {
             current_elem--;
             return *this;
@@ -58,14 +57,12 @@ namespace ft
             current_elem--;
             return tmp;
         }
-        // arithmetic operators
         vector_iterator operator+(difference_type n) const {
             return vector_iterator(current_elem + n);
         }
         vector_iterator operator-(difference_type n) const {
             return vector_iterator(current_elem - n);
         }
-        // compound assignment operators
         vector_iterator& operator+=(difference_type n) {
             current_elem += n;
             return *this;
@@ -74,7 +71,6 @@ namespace ft
             current_elem -= n;
             return *this;
         }
-        // offset dereference operator
         reference operator[](difference_type n) const {
             return *(current_elem + n);
         }
@@ -83,7 +79,6 @@ namespace ft
         iterator_type current_elem;
     };
 
-    // Non-member functions
     template<class Iterator1, class Iterator2>
     bool operator==(const vector_iterator<Iterator1>& lhs,
         const vector_iterator<Iterator2>&             rhs) {
