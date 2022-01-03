@@ -53,7 +53,8 @@ namespace ft
             _last          = _first + n;
             _reserved_last = _last;
             rep(n) { _alloc.construct(_first + i, val); }
-        } /* range */
+        }
+        /* range */
         template<class InputIterator>
         vector(typename ft::enable_if<! ft::is_integral<InputIterator>::value,
                    InputIterator>::type first,
