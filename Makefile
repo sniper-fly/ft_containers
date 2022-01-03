@@ -46,7 +46,7 @@ clean:
 	rm -rf $(OBJS) $(DEPENDS)
 
 fclean: clean
-	rm -rf $(NAME) $(COVFILES)
+	rm -rf $(NAME) $(COVFILES) ./cov_test
 
 re: fclean all
 
