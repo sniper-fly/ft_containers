@@ -326,11 +326,7 @@ namespace
             ft::vector<my_class> expect;
             expect.push_back(my_class(0, 2, 3, "a"));
             expect.push_back(my_class(10, 5, 6, "b"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
+            rep(5) { expect.push_back(my_class(11, 11, 11, "bb")); }
             expect.push_back(my_class(20, 8, 9, "c"));
             expect.push_back(my_class(30, 1, 2, "d"));
             expect.push_back(my_class(40, 4, 5, "e"));
@@ -350,11 +346,7 @@ namespace
             expect.push_back(my_class(10, 5, 6, "b"));
             expect.push_back(my_class(20, 8, 9, "c"));
             expect.push_back(my_class(30, 1, 2, "d"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
-            expect.push_back(my_class(11, 11, 11, "bb"));
+            rep(5) { expect.push_back(my_class(11, 11, 11, "bb")); }
             expect.push_back(my_class(40, 4, 5, "e"));
             EXPECT_TRUE(ins == expect);
         }
