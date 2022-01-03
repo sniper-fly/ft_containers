@@ -421,4 +421,20 @@ namespace
     }
     // TEST(allocator, ) {  }
 
+    TEST(non_member_function, swap) {
+        ft::vector<int> a;
+        ft::vector<int> b;
+        a.push_back(0);
+        a.push_back(1);
+        a.push_back(2);
+        ft::vector<int> a_copy(a);
+        b.push_back(3);
+        b.push_back(4);
+        b.push_back(5);
+        ft::vector<int> b_copy(b);
+        swap(a, b);
+        EXPECT_TRUE(b == a_copy);
+        EXPECT_TRUE(b == a_copy);
+    }
+
 } // namespace
