@@ -8,6 +8,7 @@
 #include <stdexcept>
 #include <sstream>
 #include "type_traits.hpp"
+#include "iterator.hpp"
 
 // TODO
 namespace forbidden = std;
@@ -30,7 +31,7 @@ namespace ft
         typedef forbidden::reverse_iterator<iterator> reverse_iterator;
         typedef forbidden::reverse_iterator<const_iterator>
             const_reverse_iterator;
-        typedef typename forbidden::iterator_traits<iterator>::difference_type
+        typedef typename ft::iterator_traits<iterator>::difference_type
                        difference_type;
         typedef size_t size_type;
 
