@@ -380,10 +380,9 @@ namespace
             EXPECT_TRUE(inserted == needle);
         }
         {
-            // check if insert(range) occurs error
             ft::vector<my_class> needle(10, my_class(1, 1, 1, "dummy"));
             ft::vector<my_class> inserted;
-            std::cout << "=======check if insert(range) occurs error======="
+            std::cout << "=======check if insert(range) throws an error======="
                       << std::endl;
             bool has_error = false;
             try {
@@ -394,6 +393,23 @@ namespace
             }
             EXPECT_TRUE(has_error);
             std::cout << "======================================" << std::endl;
+        }
+        {
+            ft::vector<my_class> needle;
+            ft::vector<my_class> inserted(10, my_class(1, 1, 1, "1"));
+            ft::vector<my_class> expect(inserted);
+            inserted.insert(inserted.begin(), needle.begin(), needle.end());
+            EXPECT_TRUE(inserted == expect);
+        }
+        {
+            ft::vector<my_class> needle;
+            push_back_serial_number(needle, 1, 5);
+            ft::vector<my_class> inserted(3, my_class(1, 1, 1, "1"));
+            inserted.insert(inserted.begin(), needle.begin(), needle.end());
+            ft::vector<my_class> expect;
+            push_back_serial_number(expect, 1, 5);
+            expect.resize(8, my_class(1, 1, 1, "1"));
+            EXPECT_TRUE(inserted == expect);
         }
     }
 
@@ -436,7 +452,7 @@ namespace
         }
         {
             ft::vector<my_class> era;
-            std::cout << "=======check if erase(range) occurs error======="
+            std::cout << "=======check if erase(range) throws an error======="
                       << std::endl;
             bool has_error = false;
             try {
@@ -466,5 +482,4 @@ namespace
         EXPECT_TRUE(b == a_copy);
         EXPECT_TRUE(b == a_copy);
     }
-
 } // namespace

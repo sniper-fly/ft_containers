@@ -216,12 +216,11 @@ namespace ft
             shift_to_right(shift_times, num_to_insert);
             rep(num_to_insert) {
                 if (offset + i < size()) {
-                    _first[offset + i] = *first;
+                    _first[offset + i] = first[i];
                 } else {
-                    _alloc.construct(&(_first[offset + i]), *first);
+                    _alloc.construct(&(_first[offset + i]), first[i]);
                 }
                 // ここも空の配列が来たときなどは初期化を想定しないと駄目
-                ++first;
             }
             _last += distance;
         }
