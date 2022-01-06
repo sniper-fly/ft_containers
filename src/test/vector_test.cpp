@@ -43,6 +43,10 @@ namespace
     // bool operator!=(const my_class& lhs, const my_class& rhs) {
     //     return NOT(lhs == rhs);
     // }
+    bool operator<(const my_class& lhs, const my_class& rhs) {
+        return lhs.hoge < rhs.hoge || lhs.fuga < rhs.fuga ||
+               lhs.piyo < rhs.piyo || lhs.foo < rhs.foo;
+    }
 
     void push_back_serial_number(ft::vector<my_class>& v, int from, int last) {
         for (int i = from; i <= last; ++i) {
@@ -466,6 +470,17 @@ namespace
         }
     }
     // TEST(allocator, ) {  }
+
+    TEST(non_member_function, relational_operators) {
+        ft::vector<my_class> a(3, my_class(1, 1, 1, "1"));
+        ft::vector<my_class> b(4, my_class(1, 1, 1, "1"));
+        EXPECT_TRUE(! (a == b));
+        EXPECT_TRUE(a != b);
+        EXPECT_TRUE(a < b);
+        EXPECT_TRUE(a <= b);
+        EXPECT_TRUE(b > a);
+        EXPECT_TRUE(b >= a);
+    }
 
     TEST(non_member_function, swap) {
         ft::vector<int> a;
