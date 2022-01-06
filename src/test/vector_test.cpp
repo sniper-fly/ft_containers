@@ -221,8 +221,8 @@ namespace
         rep(2) { expect.push_back(my_class(100, 101, 102, "aa")); }
         EXPECT_TRUE(res == expect);
         res.resize(
-            7, my_class(100, 101, 102, "aa")); // capacityより容量を増やす
-        rep(4) { expect.push_back(my_class(100, 101, 102, "aa")); }
+            20, my_class(100, 101, 102, "aa")); // capacityより容量を増やす
+        rep(17) { expect.push_back(my_class(100, 101, 102, "aa")); }
         EXPECT_TRUE(res == expect);
     }
 
@@ -379,6 +379,22 @@ namespace
             inserted.insert(inserted.begin(), needle.begin(), needle.end());
             EXPECT_TRUE(inserted == needle);
         }
+        {
+            // check if insert(range) occurs error
+            ft::vector<my_class> needle(10, my_class(1, 1, 1, "dummy"));
+            ft::vector<my_class> inserted;
+            std::cout << "=======check if insert(range) occurs error======="
+                      << std::endl;
+            bool has_error = false;
+            try {
+                inserted.insert(inserted.begin(), needle.end(), needle.begin());
+            } catch (std::length_error& e) {
+                std::cout << e.what() << std::endl;
+                has_error = true;
+            }
+            EXPECT_TRUE(has_error);
+            std::cout << "======================================" << std::endl;
+        }
     }
 
     TEST(modifiers, erase) {
@@ -417,6 +433,20 @@ namespace
         {
             ft::vector<my_class> era;
             era.erase(era.begin(), era.end());
+        }
+        {
+            ft::vector<my_class> era;
+            std::cout << "=======check if erase(range) occurs error======="
+                      << std::endl;
+            bool has_error = false;
+            try {
+                era.erase(era.begin() + 5, era.begin() + 2);
+            } catch (std::length_error& e) {
+                std::cout << e.what() << std::endl;
+                has_error = true;
+            }
+            EXPECT_TRUE(has_error);
+            std::cout << "======================================" << std::endl;
         }
     }
     // TEST(allocator, ) {  }
