@@ -40,9 +40,9 @@ namespace
         return lhs.hoge == rhs.hoge && lhs.fuga == rhs.fuga &&
                lhs.piyo == rhs.piyo && lhs.foo == rhs.foo;
     }
-    bool operator!=(const my_class& lhs, const my_class& rhs) {
-        return NOT(lhs == rhs);
-    }
+    // bool operator!=(const my_class& lhs, const my_class& rhs) {
+    //     return NOT(lhs == rhs);
+    // }
 
     void push_back_serial_number(ft::vector<my_class>& v, int from, int last) {
         for (int i = from; i <= last; ++i) {

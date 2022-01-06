@@ -1,7 +1,7 @@
 CXX = clang++
 INCLUDE = -I"./googletest/include" -I"./include"
 CXXFLAGS = -g -Wall -Wextra -Werror -std=c++98 $(INCLUDE) -MMD -MP
-EXTRA_FLAGS = -Wno-unused-variable -Wno-unused-parameter
+# EXTRA_FLAGS = -Wno-unused-variable -Wno-unused-parameter -Wno-unused-function
 CXXFLAGS += $(EXTRA_FLAGS)
 LIBS = -lgtest -lpthread
 

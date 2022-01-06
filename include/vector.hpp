@@ -9,6 +9,7 @@
 #include <sstream>
 #include "type_traits.hpp"
 #include "iterator.hpp"
+#include "algorithm.hpp"
 
 namespace ft
 {
@@ -311,32 +312,28 @@ namespace ft
         if (lhs.size() != rhs.size()) {
             return false;
         }
-        rep(lhs.size()) {
-            if (lhs[i] != rhs[i]) {
-                return false;
-            }
-        }
-        return true;
+        return ft::equal(lhs.begin(), lhs.end(), rhs.begin());
     }
     template<class T, class Alloc>
     bool operator!=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
-        return NOT(lhs == rhs);
+        return ! (lhs == rhs);
     }
     template<class T, class Alloc>
     bool operator<(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
-        return true;
+        return ft::lexicographical_compare(
+            lhs.begin(), lhs.end(), rhs.begin(), rhs.end());
     }
     template<class T, class Alloc>
     bool operator<=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
-        return true;
+        return operator>=(rhs, lhs);
     }
     template<class T, class Alloc>
     bool operator>(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
-        return true;
+        return operator<(rhs, lhs);
     }
     template<class T, class Alloc>
     bool operator>=(const vector<T, Alloc>& lhs, const vector<T, Alloc>& rhs) {
-        return true;
+        return ! (operator<(lhs, rhs));
     }
     template<class T, class Alloc>
     void swap(vector<T, Alloc>& x, vector<T, Alloc>& y) {
