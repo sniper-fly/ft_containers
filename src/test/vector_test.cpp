@@ -4,7 +4,6 @@
 #include <string>
 #include "macro.hpp"
 
-
 namespace
 {
     class my_class
@@ -469,7 +468,10 @@ namespace
             std::cout << "======================================" << std::endl;
         }
     }
-    // TEST(allocator, ) {  }
+    TEST(allocator, get_allocator) {
+        ft::vector<my_class> a(3, my_class(1, 1, 1, "1"));
+        EXPECT_TRUE(a.get_allocator() == std::allocator<my_class>());
+    }
 
     TEST(non_member_function, relational_operators) {
         ft::vector<my_class> a(3, my_class(1, 1, 1, "1"));
