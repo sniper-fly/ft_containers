@@ -163,10 +163,12 @@ namespace
                 ++it;
             }
         }
+        const ft::vector<my_class> const_beg(beg);
         {
-            ft::vector<my_class>::const_reverse_iterator it = beg.rbegin();
-            size_t                                       i  = 0;
-            while (it != beg.rend()) {
+            ft::vector<my_class>::const_reverse_iterator it =
+                const_beg.rbegin();
+            size_t i = 0;
+            while (it != const_beg.rend()) {
                 EXPECT_TRUE(*it == my_class(10 - i, 10 - i, 10 - i, "serial"));
                 ++i;
                 ++it;
